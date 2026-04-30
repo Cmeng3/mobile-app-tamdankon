@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_theme_data.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/get_screen_parse.dart';
 
 class RootApp extends StatefulWidget {
@@ -31,6 +32,8 @@ class _RootAppState extends State<RootApp> {
     return MaterialApp(
       // rendering the current app main-screen
       home: rootScreenWidget,
+      //
+      theme: AppThemeData().getThemeData(),
     );
   }
 }

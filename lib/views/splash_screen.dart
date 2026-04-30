@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_logo_avatar.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key, required this.onRootScreenChange});
@@ -81,36 +83,21 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // ClipOval widget is use for cut the Image widget or other widget edge in to circle shape
-              ClipOval(
-                child: Image(
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.cover,
-                  // fetch logo image from assets/ folder
-                  image: AssetImage('assets/images/tamdan_kon_logo.jpg'),
-                ),
-              ),
+              AppLogoAvatar(),
               // Adjust some height between Logo image and Welcome text
               const SizedBox(height: 20),
               // application welcome (will change to googlefont later)
-              const Text(
+              const AppText(
                 'Tamdan-Kon',
-                style: TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                  fontWeight: true,
               ),
               // Adjust some height between Logo image and Welcome text
               const SizedBox(height: 10),
               isLoading
                   ? const CircularProgressIndicator()
-                  : Text( // welcome user (will change to googlefont later) 
+                  : AppText( // welcome user (will change to googlefont later) 
                     'Welcome ${username ?? 'User'}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
                   ),
             ],
           ),

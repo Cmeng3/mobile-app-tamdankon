@@ -32,13 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // we will styling this snack-bar to show error in the need commit
   void getSnackBar(String error) {
     final snackBar = SnackBar(
-            content: Text(error),
-            action: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-                // Some code to undo the change.
-              },
-            ),
+            backgroundColor: Colors.redAccent,
+            content: Center(child: AppText(error)),
           );
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.

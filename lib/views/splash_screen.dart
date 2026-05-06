@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
               // Adjust some height between Logo image and Welcome text
               const SizedBox(height: 10),
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(color: Colors.white)
                   : AppText( // welcome user (will change to googlefont later) 
                     'Welcome ${username ?? 'User'}',
                   ),

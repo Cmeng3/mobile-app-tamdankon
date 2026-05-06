@@ -19,7 +19,7 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(context) {
     return Scaffold(
-      
+      body: Text('admin'),
     );
   }
 }

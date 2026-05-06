@@ -68,6 +68,11 @@ class AppThemeData{
           style: IconButton.styleFrom(
             foregroundColor: Color.fromARGB(255, 3, 3, 80),
           )
+        ),
+
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: const Color.fromARGB(255, 3, 3, 80),
+          circularTrackPadding: EdgeInsets.all(1)
         )
       );
   }

@@ -70,9 +70,48 @@ class AppThemeData{
           )
         ),
 
+        // styling the progress-indicator, its default color and padding
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: const Color.fromARGB(255, 3, 3, 80),
           circularTrackPadding: EdgeInsets.all(1)
+        ),
+
+        // make scaffold backgroud color to light-grey
+        scaffoldBackgroundColor: Colors.grey.shade300,
+
+        // styling the navigation-bar theme
+        navigationBarTheme: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
+            (states) {
+              if (states.contains(WidgetState.selected)) {
+                return const TextStyle(
+                  color: Color.fromARGB(255, 3, 3, 80),
+                  fontWeight: FontWeight.bold,
+                );
+              }
+
+              return const TextStyle(
+                color: Colors.grey,
+              );
+            },
+          ),
+          iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
+            (states) {
+              if (states.contains(WidgetState.selected)) {
+                return const IconThemeData(
+                  color: Color.fromARGB(255, 3, 3, 80),
+                  size: 30,
+                );
+              }
+
+              return const IconThemeData(
+                color: Colors.grey,
+                size: 24,
+              );
+            },
+          ),
+          indicatorColor:const Color.fromARGB(25, 33, 150, 243),
+          backgroundColor: Colors.grey.shade100,
         )
       );
   }

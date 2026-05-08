@@ -8,20 +8,22 @@ class AppText extends StatelessWidget {
     {
       super.key,
       this.fontSize = 14,
-      this.fontWeight = false
+      this.fontWeight = false,
+      this.color = Colors.white
     }
   );
 
   final String data;
   final double fontSize;
   final bool fontWeight;
+  final Color color;
   
   @override
   Widget build(context) {
     return Text(
       data,
       style: TextStyle(
-        color: Colors.white,
+        color: color,
         fontSize: fontSize,
         fontWeight: fontWeight? FontWeight.bold : null,
       )

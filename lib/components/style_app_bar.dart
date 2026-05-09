@@ -3,7 +3,15 @@ import 'package:tamdan_kon_mobile_flutter/components/app_logo_avatar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 
 class StyleAppBar extends StatelessWidget implements PreferredSizeWidget{
-  const StyleAppBar({super.key});
+  const StyleAppBar({
+    super.key, 
+    required this.username, 
+    required this.role
+  });
+
+  // user information needed for display in app-bar
+  final String username;
+  final String role;
   @override
   Widget build(context) {
     return AppBar(
@@ -41,7 +49,7 @@ class StyleAppBar extends StatelessWidget implements PreferredSizeWidget{
                    color: Color.fromARGB(255, 119, 119, 223),
                 ),
                 AppText(
-                  'Kunnarak!',
+                  username,
                   fontWeight: true,
                 ),
               ],
@@ -66,7 +74,7 @@ class StyleAppBar extends StatelessWidget implements PreferredSizeWidget{
                     color: Colors.blue.shade50,
                   ),
                   child: AppText(
-                    'parent',
+                    role,
                     fontSize: 12,
                     fontWeight: true,
                     color: Colors.blue.shade700

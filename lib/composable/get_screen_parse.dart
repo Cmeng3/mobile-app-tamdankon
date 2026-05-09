@@ -1,4 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_attendance_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_my_account_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/splash_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/login_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_screen.dart';
@@ -9,7 +13,7 @@ import 'package:tamdan_kon_mobile_flutter/views/admin/admin_screen.dart';
 
 
 // parsing the string value of current currentRootScreen of RootApp widget to actual screen widget value
-Widget getRootScreenParse(String currentRootScreen, void Function(String rootScreen) rootAppScreenSwitcher ) {
+Widget getRootScreenParse(String currentRootScreen, void Function(String rootScreen) rootAppScreenSwitcher) {
   if(currentRootScreen == 'splash_screen'){
       return SplashScreen(
         onRootScreenChange: rootAppScreenSwitcher,
@@ -34,5 +38,21 @@ Widget getRootScreenParse(String currentRootScreen, void Function(String rootScr
       return AdminScreen(
         onRootScreenChange: rootAppScreenSwitcher,
       );
+  }
+}
+
+// parsing the parent-screen index value to the actual parent-screen 
+Widget getParentScreenParse(int parentScreenIndex) {
+  if(parentScreenIndex == 0){
+    return ParentMapScreen();
+  }
+  else if(parentScreenIndex == 1){
+    return ParentAttendanceScreen();
+  }
+  else if(parentScreenIndex == 2){
+    return ParentChatScreen();
+  }
+  else {
+    return ParentMyAccountScreen();
   }
 }

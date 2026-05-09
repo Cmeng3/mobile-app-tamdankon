@@ -73,6 +73,8 @@ class LoginModel {
         await prefs.setString('user_email', user['email'] as String);
         await prefs.setString('phone_number', user['phone_number'] as String);
         await prefs.setString('user_token', loginService.token as String);
+        
+
         // get the user back to splash-screen for a second welcome
         onRootScreenChange('splash_screen');
 

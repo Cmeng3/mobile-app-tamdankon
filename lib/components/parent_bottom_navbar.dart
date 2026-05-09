@@ -6,9 +6,9 @@ class ParentBottomNavbar extends StatelessWidget{
     required this.onParentScreenChange,
     required this.currentScreen
   });
-  // trigger the parent-app to change to the destination screen
+  // trigger the parent-screen to change to the destination screen
   final Function(int index) onParentScreenChange;
-  // current screen index
+  // current parent-screen index
   final int currentScreen;
   @override
   Widget build(context) {

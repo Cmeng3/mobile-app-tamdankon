@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_attendance_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
@@ -42,9 +43,9 @@ Widget getRootScreenParse(String currentRootScreen, void Function(String rootScr
 }
 
 // parsing the parent-screen index value to the actual parent-screen 
-Widget getParentScreenParse(int parentScreenIndex) {
+Widget getParentScreenParse(int parentScreenIndex, GoogleMap googleMap) {
   if(parentScreenIndex == 0){
-    return ParentMapScreen();
+    return ParentMapScreen(googleMap: googleMap);
   }
   else if(parentScreenIndex == 1){
     return ParentAttendanceScreen();

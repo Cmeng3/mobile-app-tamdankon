@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ParentScreenModel {
   ParentScreenModel({required this.onParentScreenChange}){
     getUserInfo();
+    print('hello');
   }
   // user's information
   int? id;
@@ -16,6 +17,7 @@ class ParentScreenModel {
   // method that fetching user's information from local-storage
   Future<void> getUserInfo() async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
+    
     id = pref.getInt('user_id');
     username = pref.getString('username');
     email = pref.getString('user_email');

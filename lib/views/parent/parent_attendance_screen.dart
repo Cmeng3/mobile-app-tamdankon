@@ -8,11 +8,18 @@ class ParentAttendanceScreen extends StatefulWidget{
 }
 
 class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
-
+  var index = 0;
   @override
   Widget build(context) {
     return Center(
-      child: Text('Attendance screen'),
+      child: Column(children: [
+        Text('$index'),
+        OutlinedButton(onPressed: (){
+          setState(() {
+            index++;
+          });
+        }, child: Text('press here'))
+      ],),
     );
   }
 }

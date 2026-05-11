@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/components/parent_bottom_navbar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
-import 'package:tamdan_kon_mobile_flutter/composable/get_screen_parse.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/logout_user.dart';
 import 'package:tamdan_kon_mobile_flutter/models/parent_screen_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_attendance_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_my_account_screen.dart';
 
 class ParentScreen extends StatefulWidget {
   const ParentScreen({super.key, required this.onRootScreenChange});
@@ -17,12 +21,17 @@ class ParentScreen extends StatefulWidget {
 }
 
 class _ParentScreenState extends State<ParentScreen> {
-  // get parent-screen model, which design to hold datas and logic of parent-screen
-  late ParentScreenModel parentScreenModel = ParentScreenModel(onParentScreenChange: triggerParentState);
   // currentParentScreenIndex design to control parent-screens
   var currentParentScreenIndex = 0;
-  // currentParentScreen store current parent screen widget
-  late Widget currentParentScreen;
+  final GoogleMap googleMap = GoogleMap(
+    initialCameraPosition: CameraPosition
+    (
+      target: LatLng(11.587098, 104.844813),
+      zoom: 18
+    ),
+    markers: {
+      Marker(markerId: MarkerId('home'), position: LatLng(11.587098, 104.844813)),
+  });
   // method for changing the parent-screen
   void changeParentAppScreen(int index) {
     setState(() {
@@ -36,16 +45,30 @@ class _ParentScreenState extends State<ParentScreen> {
       isLoading = !isLoading;
     });
   }
+  // _screens store the list of parent screens 
+  // purpose: to use in IndexedStack, which pre-render all the screen during execution of IndexedSstack()
+  late final List<Widget> parentScreens;
+  // get parent-screen model, which design to hold datas and logic of parent-screen
+  late ParentScreenModel parentScreenModel = ParentScreenModel(onParentScreenChange: triggerParentState);
 
   @override
   void initState() {
     super.initState();
+    // expicit calling parentScreenModel to instanciate it
+    // becuase property mark as late, won't initialize until first use of it
+    // even though we initial it during it first place
+    parentScreenModel;
+    // list of parent screen
+    parentScreens = [
+      ParentMapScreen(googleMap: googleMap),
+      ParentAttendanceScreen(),
+      ParentChatScreen(),
+      ParentMyAccountScreen(),
+    ];
   }
 
   @override
   Widget build(context) {
-    // get the current parent-screen
-    currentParentScreen = getParentScreenParse(currentParentScreenIndex);
     return Scaffold(
       // styleAppBar() is the current app style tool-bar
       appBar:
@@ -55,7 +78,11 @@ class _ParentScreenState extends State<ParentScreen> {
                 username: parentScreenModel.username!,
                 role: parentScreenModel.role!,
               ),
-      body: currentParentScreen,
+      // pre-render all screensstore in _screens
+      body:  IndexedStack(
+        index: currentParentScreenIndex,
+        children: parentScreens,
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () {
@@ -67,6 +94,7 @@ class _ParentScreenState extends State<ParentScreen> {
       bottomNavigationBar: ParentBottomNavbar(
         onParentScreenChange: changeParentAppScreen,
         currentScreen: currentParentScreenIndex,
+      
       ),
     );
   }

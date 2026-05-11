@@ -9,7 +9,8 @@ class AppText extends StatelessWidget {
       super.key,
       this.fontSize = 14,
       this.fontWeight = false,
-      this.color = Colors.white
+      this.color = Colors.white,
+      this.textAlign,
     }
   );
 
@@ -17,6 +18,7 @@ class AppText extends StatelessWidget {
   final double fontSize;
   final bool fontWeight;
   final Color color;
+  final TextAlign? textAlign;
   
   @override
   Widget build(context) {
@@ -26,7 +28,8 @@ class AppText extends StatelessWidget {
         color: color,
         fontSize: fontSize,
         fontWeight: fontWeight? FontWeight.bold : null,
-      )
+      ),
+      textAlign: textAlign,
     );
   }
 }

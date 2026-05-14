@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_badge.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_logo_avatar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 
@@ -59,27 +60,11 @@ class StyleAppBar extends StatelessWidget implements PreferredSizeWidget{
         // in action here, we styling a badge for indicate of user role
         actions: [
           // designing a badge that showing the user's role
-          Container(
-                  margin: EdgeInsets.only(right: 10),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue.shade200,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.blue.shade50,
-                  ),
-                  child: AppText(
-                    role,
-                    fontSize: 12,
-                    fontWeight: true,
-                    color: Colors.blue.shade700
-                  ),
-                )
+          AppBadge(
+            role, 
+            color: Colors.blue, 
+            shadeColor: Colors.blue.shade50
+          )
         ],
       );
   }

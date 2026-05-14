@@ -5,6 +5,7 @@ import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/attandance_tile.dart';
 import 'package:tamdan_kon_mobile_flutter/components/boolean_info_tile.dart';
 import 'package:tamdan_kon_mobile_flutter/components/info_tile.dart';
+import 'package:tamdan_kon_mobile_flutter/components/style_title_text_logo.dart';
 import 'package:tamdan_kon_mobile_flutter/models/parent_map_screen_model.dart';
 
 class ParentMapScreen extends StatefulWidget {
@@ -93,7 +94,6 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                 child: GoogleMap(
                   onMapCreated: (GoogleMapController mapController) {
                     parentMapScreenModel.mapController = mapController;
-                    print('map controller create: ${parentMapScreenModel.mapController}');
                   },
                   initialCameraPosition: CameraPosition(
                     target: LatLng(11.587098, 104.844813),
@@ -122,22 +122,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // display the student-info title
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.school_rounded,
-                          color: Colors.blue,
-                          size: 28,
-                        ),
-                        const SizedBox(width: 10),
-                        AppText(
-                          'Student Information',
-                          color: Colors.black,
-                          fontWeight: true,
-                          fontSize: 22,
-                        ),
-                      ],
-                    ),
+                    StyleTitleTextLogo('Student Information'),
                     const SizedBox(height: 20),
                     // the student information
                     InfoTile(

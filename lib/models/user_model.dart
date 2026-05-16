@@ -37,7 +37,7 @@ class UserModel {
   void getParentScreens() {
      parentScreens = [
       ParentMapScreen(parentId: id!),
-      ParentAttendanceScreen(),
+      ParentAttendanceScreen(parentId: id!),
       ParentChatScreen(),
       ParentMyAccountScreen(),
     ];

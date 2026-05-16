@@ -3,10 +3,6 @@ import 'package:tamdan_kon_mobile_flutter/components/parent_bottom_navbar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/logout_user.dart';
 import 'package:tamdan_kon_mobile_flutter/models/user_model.dart';
-import 'package:tamdan_kon_mobile_flutter/views/parent/parent_attendance_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/parent/parent_my_account_screen.dart';
 
 class ParentScreen extends StatefulWidget {
   const ParentScreen({super.key, required this.onRootScreenChange});

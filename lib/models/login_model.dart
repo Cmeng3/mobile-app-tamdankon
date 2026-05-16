@@ -44,7 +44,7 @@ class LoginModel {
   // validate the username of the input
   // it must not be empty
   String? validateUsername(String? username){
-    if(username == null || username == '' || username.trim() == ''){
+    if(username == null || username.trim() == ''){
       return 'username must be fill';
     }
     return null;

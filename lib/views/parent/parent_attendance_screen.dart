@@ -1,65 +1,94 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_badge.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/boolean_badge.dart';
 import 'package:tamdan_kon_mobile_flutter/components/field_text.dart';
+import 'package:tamdan_kon_mobile_flutter/components/logo_badge.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_title_text_logo.dart';
+import 'package:tamdan_kon_mobile_flutter/models/parent_attendance_screen_model.dart';
 
-class ParentAttendanceScreen extends StatefulWidget{
-  const ParentAttendanceScreen({super.key});
+class ParentAttendanceScreen extends StatefulWidget {
+  const ParentAttendanceScreen({super.key, required this.parentId});
+
+  final int parentId;
   @override
   State<ParentAttendanceScreen> createState() => _ParentAttendanceScreenState();
 }
 
 class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
-  final List<Map<String, dynamic>> attendanceList = [
-    {
-      "date": "12 May 2026",
-      "status": "Present",
-    },
-    {
-      "date": "11 May 2026",
-      "status": "Absent",
-    },
-    {
-      "date": "10 May 2026",
-      "status": "Present",
-    },
-    {
-      "date": "09 May 2026",
-      "status": "Absent",
-    },
-  ];
+  // create a formkey to take control over form-state
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // elevation method
+  // purpose: allow children class or methods to trigger parent-attendance-screen state change
+  void updateParentState() {
+    setState(() {});
+  }
+  // ParentAttendanceScreenModel control the logic and data of parent-attendance-screen
+  late ParentAttendanceScreenModel parentAttendanceScreenModel =
+      ParentAttendanceScreenModel(
+        parentId: widget.parentId,
+        formKey: _formKey,
+        onUpdateParentState: updateParentState,
+      );
+  @override
+  void initState() {
+    super.initState();
+    // starting api-call to get all student-attendance records
+    parentAttendanceScreenModel.getStudentAttendances();
+  }
+
+  @override
+  void dispose() {
+    // if it not null, let cancel it out
+    if(parentAttendanceScreenModel.requestStatusTimer != null) {
+      parentAttendanceScreenModel.requestStatusTimer!.cancel();
+      parentAttendanceScreenModel.todayAttendanceTimer!.cancel();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(context) {
-    return SafeArea(
+    return parentAttendanceScreenModel.isLoading
+    ? const Center(child: CircularProgressIndicator())
+    : SafeArea(
+      // Column 1#: layout all screen-element widgets
       child: Column(
         children: [
-          // Container #1: display the form-card
-          Container(
-            margin: const EdgeInsets.all(12),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(22),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(20, 0, 0, 0),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+        // Container #1: display the form-card
+        Container(
+          margin: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(20, 0, 0, 0),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
             //
-            child: Form(
-              child: Column(
+        child: Form(
+          key: _formKey,
+          // Column 2#: display the Attendance-Request title and (form-field or Status sign)
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Row 1#: display the title of permission-form
+              // we will out-source this title part later
+              StyleTitleTextLogo('Attendance Request'),
+              //
+              const SizedBox(height: 24),
+              // Column 3#: display form-field part and button
+          parentAttendanceScreenModel.attendanceRequestStatus ==
+                  'no_request'
+              ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Row 1#: display the title of permission-form
-                  // we will out-source this title part later
-                  StyleTitleTextLogo('Attendance Request'),
-                  const SizedBox(height: 24),
-                  // display the label
                   FieldText('Reason', isRequired: true),
                   const SizedBox(height: 8),
                   // Reason-field part
@@ -71,6 +100,11 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                       fillColor: Colors.grey.shade100,
                       contentPadding: const EdgeInsets.all(16),
                     ),
+                    validator:
+                        parentAttendanceScreenModel.validateReason,
+                    onSaved:
+                        parentAttendanceScreenModel
+                            .getAttendanceReason,
                   ),
                   const SizedBox(height: 20),
                   // styling the submit button
@@ -78,7 +112,8 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed:
+                          parentAttendanceScreenModel.handleSubmit,
                       style: ElevatedButton.styleFrom(
                         // elevation attribute, will make button elevated the shadow when press
                         elevation: 0,
@@ -94,6 +129,25 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                       ),
                     ),
                   ),
+                ],
+              )
+              : (parentAttendanceScreenModel
+                          .attendanceRequestStatus ==
+                      'pending'
+                  ? const Center(
+                    child: LogoBadge(
+                      color: Colors.orange,
+                      shadeColor: Color.fromARGB(25, 255, 152, 0),
+                      icon: Icons.pending,
+                    ),
+                  )
+                  : const Center(
+                    child: LogoBadge(
+                      color: Colors.green,
+                      shadeColor: Color.fromARGB(25, 76, 175, 80),
+                      icon: Icons.check_circle,
+                    ),
+                  )),
                 ],
               ),
             ),
@@ -114,9 +168,9 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                 ),
                 // Container #2: badge-style to show length of attendance record
                 AppBadge(
-                  '${attendanceList.length} Records', 
-                  color: Colors.blue, 
-                  shadeColor: Colors.blue.shade50
+                  '${parentAttendanceScreenModel.attendancesList.length} Records',
+                  color: Colors.blue,
+                  shadeColor: Colors.blue.shade50,
                 ),
               ],
             ),
@@ -126,17 +180,39 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
           // purpose: to take up much space as it can
           // Attendance-Lists part
           Expanded(
-            child: ListView.builder(
+            child:
+              // If attendance-records is empty, let display the message 'No Records'
+              // else display the list of record
+                parentAttendanceScreenModel.attendancesList.isEmpty
+                    ? const Center(
+                      child: AppText(
+                        'No records',
+                        color: Color.fromARGB(50, 0, 0, 0),
+                        fontWeight: true,
+                      ),
+                    )
+            : ListView.builder(
               // insert the padding for children inside ListView
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: attendanceList.length,
+              itemCount:
+                  parentAttendanceScreenModel
+                      .attendancesList
+                      .length,
               //
               itemBuilder: (context, index) {
                 // store each attendance record from attendanceList
-                final attendance = attendanceList[index];
+                final attendance =
+                    parentAttendanceScreenModel
+                        .attendancesList[index];
                 // store the bool value, from the comparision expression
-                final bool isPresent =
-                    attendance['status'] == 'Present';
+                final bool isPresent = attendance['is_present'];
+                // extract and create the right format of date-time using intl library
+                DateTime dateTime = DateTime.parse(
+                  attendance['created_at'],
+                );
+                String formatted = DateFormat(
+                  'd MMMM yyyy',
+                ).format(dateTime);
                 // Container 3#: display each element of attendance record
                 return Container(
                   // insert the margin below each attendance record
@@ -161,18 +237,18 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                         width: 52,
                         height: 52,
                         decoration: BoxDecoration(
-                          color: isPresent
-                              ? Colors.green.shade50
-                              : Colors.red.shade50,
+                          color:
+                              isPresent
+                                  ? Colors.green.shade50
+                                  : Colors.red.shade50,
                           borderRadius: BorderRadius.circular(16),
                         ),
-                      child: Icon(
+                        child: Icon(
                           isPresent
                               ? Icons.check_circle
                               : Icons.cancel,
-                          color: isPresent
-                              ? Colors.green
-                              : Colors.red,
+                          color:
+                              isPresent ? Colors.green : Colors.red,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -180,10 +256,11 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                       // purpose: to prvent column from taking much space horizentally, that cuase render error
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
                             AppText(
-                              attendance['date'],
+                              formatted,
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: true,
@@ -201,8 +278,9 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
                       ),
                       // Container 5#: display the status badge
                       BooleanBadge(
-                        attendance['status'],
-                        isTrue: attendance['status'] == 'Present',
+                        // attendance['status'],
+                        'present',
+                        isTrue: isPresent,
                       ),
                     ],
                   ),

@@ -9,10 +9,15 @@ import 'package:tamdan_kon_mobile_flutter/components/style_title_text_logo.dart'
 import 'package:tamdan_kon_mobile_flutter/models/parent_map_screen_model.dart';
 
 class ParentMapScreen extends StatefulWidget {
-  const ParentMapScreen({super.key, required this.parentId});
+  const ParentMapScreen({
+    super.key, 
+    required this.parentId,
+    required this.onTriggerParentAppSnackbar,
+  });
   // store the parent id
   // purpose: query parent corresponse data
   final int parentId;
+  final void Function(String error) onTriggerParentAppSnackbar;
 
   @override
   State<ParentMapScreen> createState() => _ParentMapScreenState();
@@ -54,7 +59,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
     parentId: widget.parentId,
     onUpdateParentState: updateParentState,
     onUpdateBusLocation: getNewBusLocation,
-    onTriggerSnackBar: getSnackBar,
+    onTriggerSnackBar: widget.onTriggerParentAppSnackbar,
   );
 
   @override

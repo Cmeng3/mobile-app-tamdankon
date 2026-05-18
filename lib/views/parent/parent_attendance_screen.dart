@@ -51,6 +51,8 @@ class _ParentAttendanceScreenState extends State<ParentAttendanceScreen> {
   @override
   Widget build(context) {
     return parentAttendanceScreenModel.isLoading
+    // Center 1# and CircurlarProgressIndicator
+    // purpose: wait until essential datas like student-attendances-list and request-status is finished fetching
     ? const Center(child: CircularProgressIndicator())
     : SafeArea(
       // Column 1#: layout all screen-element widgets

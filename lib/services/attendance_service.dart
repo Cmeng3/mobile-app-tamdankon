@@ -49,7 +49,7 @@ class AttendanceService {
     );
   }
 
-  //
+  // store the parent-attendance-request
   Future<bool> storeAttendanceRequestRecord(String reason) async {
     // prepare request-body data to do post http request
     Map<String, String> data = {

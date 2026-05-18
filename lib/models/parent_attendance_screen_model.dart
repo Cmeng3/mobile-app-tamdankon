@@ -97,6 +97,9 @@ class ParentAttendanceScreenModel {
         // if not, let doing data polling
         // purpose: update real-time for attendance-request status and today-attendance scan
         } else {
+          // calling this one, to retrieve the request-status to ealy update in parent-attendance-screen
+          // because it can bet 'pending' or 'no_request'
+          getStreamOfRequestStatus(null);
           todayAttendanceTimer = Timer.periodic(Duration(seconds: 2), getStreamOfTodayAttendance);
           // start checking for the request-status
           // if the request-status is 'no_data' or 'pending' 
@@ -106,10 +109,9 @@ class ParentAttendanceScreenModel {
         }
       } else{
         error = attendanceService.error!;
-        print('error: attendanceService.error');
       }
     } else{
-      print(studentInfoService.error);
+      error = studentInfoService.error!;
     }
     // trigger parent-state-to-changing here
     //
@@ -118,7 +120,7 @@ class ParentAttendanceScreenModel {
   }
   // if student not present yet, let check for student attendance-request-status
   // by default, it gonna be 'no_data' meaning no today-request-record
-  void getStreamOfRequestStatus(Timer timer) async{
+  void getStreamOfRequestStatus(Timer? timer) async{
     // checking for the attendance-request-status
     // if confirm, stop fetching and update-parent-state
     if(attendanceRequestStatus == 'confirm'){
@@ -137,7 +139,7 @@ class ParentAttendanceScreenModel {
     onUpdateParentState();
   }
   // stream-request to get the update-record
-  void getStreamOfTodayAttendance(Timer timer) async{
+  void getStreamOfTodayAttendance(Timer? timer) async{
     // checking for student-today-attence
     // if present, we don't need any data-polling request
     if(todayAttendance == 'present') {
@@ -154,6 +156,7 @@ class ParentAttendanceScreenModel {
       todayAttendanceTimer!.cancel();
       onUpdateParentState();
     }
+    // we won't trigger update-state here, because we already calling this service one before in $this.getStudentAttendance()
     else if(await attendanceService.getAttendanceStatus()){
       // get the today-attendance
       todayAttendance = attendanceService.getResponseParse()['attendance_status'];

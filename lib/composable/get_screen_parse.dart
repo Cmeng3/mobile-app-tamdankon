@@ -9,7 +9,10 @@ import 'package:tamdan_kon_mobile_flutter/views/admin/admin_screen.dart';
 
 
 // parsing the string value of current currentRootScreen of RootApp widget to actual screen widget value
-Widget getRootScreenParse(String currentRootScreen, void Function(String rootScreen) rootAppScreenSwitcher) {
+Widget getRootScreenParse(
+  String currentRootScreen, 
+  void Function(String rootScreen) rootAppScreenSwitcher,
+) {
   if(currentRootScreen == 'splash_screen'){
       return SplashScreen(
         onRootScreenChange: rootAppScreenSwitcher,

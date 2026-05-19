@@ -5,11 +5,12 @@ import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/my_account_screen/parent_my_account_screen.dart';
 
-class UserModel {
-  UserModel({
+class ParentScreenModel {
+  ParentScreenModel({
     required this.onParentScreenChange,
     required this.onTriggerUserAppSnackBar,
-    required this.onRootScreenChange
+    required this.onChangeAppbarUsername,
+    required this.onRootScreenChange,
   }){
     // invoke this to get user credential from local-storage asyncronizely
     getUserInfo();
@@ -23,9 +24,11 @@ class UserModel {
   List<Widget>? parentScreens;
   // method that control the parent-screen
   final void Function() onParentScreenChange;
-  // method that allow user-app sub-screen to trigger it parent snackbar to show their error
-  final void Function(String error) onTriggerUserAppSnackBar;
   //
+  final void Function(String username) onChangeAppbarUsername;
+  // method that allow user-app sub-screen to trigger it parent snackbar to show their error
+  final void Function(String message, Color color) onTriggerUserAppSnackBar;
+  // trigger to switching root-screen
   final void Function(String rootScreen) onRootScreenChange;
 
   // method that fetching user's information from local-storage
@@ -51,15 +54,20 @@ class UserModel {
       ),
       ParentAttendanceScreen(parentId: id!),
       ParentChatScreen(),
+      // this field need alot of parent-state-management method
+      // reason: because this screen allow user to update their information
       ParentMyAccountScreen(
         user: userParse(),
         onRootScreenChange: onRootScreenChange,
+        onTriggerParentScreenSnackBar: onTriggerUserAppSnackBar,
+        onUpdateAppbarUsername: onChangeAppbarUsername,
       ),
     ];
   }
 
   Map<String, String> userParse() {
     Map<String, String> data = {
+      'id' : id.toString(),
       'username' :username!,
       'email' : email!,
       'phone_number' : phoneNumber!,

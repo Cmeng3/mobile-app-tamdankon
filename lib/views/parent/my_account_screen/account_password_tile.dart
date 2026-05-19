@@ -99,7 +99,7 @@ class AccountPasswordTile extends StatelessWidget {
                                 onParentStateChange();
                             },
                             iconSize: 16,
-                            icon: obscureText? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                            icon: obscureText? Icon(Icons.visibility, color: Colors.blue) : Icon(Icons.visibility_off, color: Colors.blue),
                           ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -139,7 +139,7 @@ class AccountPasswordTile extends StatelessWidget {
                                 onParentStateChange();
                             },
                             iconSize: 16,
-                            icon: obscureText? Icon(Icons.visibility) : Icon(Icons.visibility_off)
+                            icon: obscureText? Icon(Icons.visibility, color: Colors.blue) : Icon(Icons.visibility_off, color: Colors.blue)
                             ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(

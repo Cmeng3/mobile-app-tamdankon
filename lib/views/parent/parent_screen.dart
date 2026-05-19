@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/parent_bottom_navbar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
-import 'package:tamdan_kon_mobile_flutter/composable/logout_user.dart';
-import 'package:tamdan_kon_mobile_flutter/models/user_model.dart';
+import 'package:tamdan_kon_mobile_flutter/models/parent_screen_model.dart';
 
 class ParentScreen extends StatefulWidget {
   const ParentScreen({super.key, required this.onRootScreenChange});
@@ -32,11 +31,17 @@ class _ParentScreenState extends State<ParentScreen> {
       isLoading = !isLoading;
     });
   }
+    // update parent-screen appbar username
+  void updateParentAppbarUsername(String username) {
+    setState(() {
+      parentScreenModel.username = username;
+    });
+  }
   // trigger the parent-screen-snackbar from every sub-screen, to show their error message
-  void getSnackBar(String error) {
+  void getSnackBar(String message, Color color) {
     final snackBar = SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Center(child: AppText(error)),
+            backgroundColor: color,
+            content: Center(child: AppText(message)),
           );
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.
@@ -46,10 +51,11 @@ class _ParentScreenState extends State<ParentScreen> {
   // purpose: to use in IndexedStack, which pre-render all the screen during execution of IndexedSstack()
   late final List<Widget> parentScreens;
   // get parent-screen model, which design to hold datas and logic of parent-screen
-  late UserModel parentScreenModel = UserModel(
+  late ParentScreenModel parentScreenModel = ParentScreenModel(
     onParentScreenChange: triggerParentState,
     onRootScreenChange: widget.onRootScreenChange,
     onTriggerUserAppSnackBar: getSnackBar,
+    onChangeAppbarUsername: updateParentAppbarUsername
   );
 
   @override

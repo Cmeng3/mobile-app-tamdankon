@@ -21,7 +21,7 @@ class AccountInfoTile extends StatelessWidget {
   bool editLock;
   final IconData icon;
   final String title;
-  final String value;
+  final String? value;
   bool isEditing;
   final GlobalKey<FormState> formKey;
   // trigger edit-lock handler function
@@ -116,7 +116,7 @@ class AccountInfoTile extends StatelessWidget {
                   ),
                 ) :
                 AppText(
-                  value,
+                  value ?? 'No Data',
                   color: Colors.black,
                   fontSize: 16,
                   fontWeight: true,

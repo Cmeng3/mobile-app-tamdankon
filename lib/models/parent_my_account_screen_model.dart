@@ -1,30 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tamdan_kon_mobile_flutter/services/user_service.dart';
 
 class ParentMyAccountScreenModel {
   ParentMyAccountScreenModel({
+    required this.userId,
+    required this.onTriggerParentScreenSnackbar,
+    required this.onUpdateAppbarUsername,
     required this.onParentStateChange,
+    required this.onUpdateParentStateInfo,
     required this.formKey,
     this.editUsername = false,
     this.editEmail = false,
     this.editPassword = false,
     this.editPhoneNumber = false
   });
+  //
+  final String userId;
   // isEditing design to allow and lock the UI from editing at the same-time
   bool isEditingLock = false;
   String currentEditing = '';
-  //
+
+  // control what field is editing
   String? username;
   String? email;
   String? password;
   String? phoneNumber;
   String? confirmPassword;
+
   // field that control, which information is goint to edit
   bool editUsername;
   bool editEmail;
   bool editPassword;
   bool editPhoneNumber;
 
+  // store the error message
+  String? error;
+  //
+  bool isLoading = false;
+  // update the parent-state after the parent-info change
+  final void Function(String data, String currentEditField) onUpdateParentStateInfo;
+  //update parent-screen appbar-username
+  final void Function(String username) onUpdateAppbarUsername;
+  // trigger parent-screen snackbar
+  final void Function(String message, Color color) onTriggerParentScreenSnackbar;
   // trigger parent-state-change
   final void Function() onParentStateChange;
   // control parent-form-state
@@ -68,23 +88,60 @@ class ParentMyAccountScreenModel {
     onParentStateChange();
   }
   //
-  void handleEditing() {
+  void handleEditing() async{
     if(formKey.currentState!.validate()) {
       formKey.currentState!.save();
       // we will implement this in future
       // after we finish api-endpoint implementation
+      UserService userService = UserService(
+        userId: userId,
+        updateField: currentEditing,
+        updateData: getCurrentUpdateData(),
+      );
+
+      if(await userService.getUpdateUser()){
+        // we will write the edit data to the local storage
+        // also trigger the change in parent-screen and parent-my-account-screen
+        // instantiate the sharedpreferences object
+        // purpose: write new edit value to locat-storage
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        // checking which field need to update
+        // purpose: update the local-storage and current parent-my-account-screen state
+        // note: for password we don't need to update on locat-storage or parent-my-account-screen state
+        if(editUsername) {
+          // trigger parent-screen to change appbar
+          onUpdateAppbarUsername(username!);
+          // write the new update info to local storage and reflect change in model-screen
+          pref.setString('username', username!);
+          onUpdateParentStateInfo(username!, currentEditing);
+        } else if (editEmail){
+           // write the new update info to local storage and reflect change in model-screen
+          pref.setString('user_email', email!);
+          onUpdateParentStateInfo(email!, currentEditing);
+        } else if (editPassword) {
+          // show success snackbar instead of reflecting the update in parent-my-account-screen
+          onTriggerParentScreenSnackbar('password updated', Colors.green);
+        }
+        else if (editPhoneNumber){
+           // write the new update info to local storage and reflect change in model-screen
+          pref.setString('phone_number', phoneNumber!);
+          onUpdateParentStateInfo(phoneNumber!, currentEditing);
+        }
+        
+      } else {
+        error = userService.error!;
+        onTriggerParentScreenSnackbar(error!, Colors.red);
+      }
+      // after confirm the editing, let invoke this function to make screen back to normal
+      getCancelEditing();
     }
-    // unlock the editing
-    isEditingLock = false;
-    // after cancel, their is no current-editing
-    currentEditing = '';
-    // trigger parent-state
-    onParentStateChange();
+    
   }
   void getConfirmPassword(String? cnfPass) {
     confirmPassword = cnfPass;
   }
   // get the editing information
+  // purpose: store it in attribute-data
   void getEditInfo(String? data) {
     // checking which field is editing
     // purpose: to store the new editing information
@@ -139,5 +196,17 @@ class ParentMyAccountScreenModel {
     return null;
   }
 
-
+  String getCurrentUpdateData() {
+    // get the current edit data
+    if(currentEditing == 'username') {
+      return username!;
+    } else if(currentEditing == 'email') {
+      return email!;
+    } else if(currentEditing == 'password') {
+      return password!;
+    } else if(currentEditing == 'phoneNumber') {
+      return phoneNumber!;
+    }
+    return '';
+  }
 }

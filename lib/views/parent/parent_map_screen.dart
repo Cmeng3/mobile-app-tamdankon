@@ -17,7 +17,7 @@ class ParentMapScreen extends StatefulWidget {
   // store the parent id
   // purpose: query parent corresponse data
   final int parentId;
-  final void Function(String error) onTriggerParentAppSnackbar;
+  final void Function(String message, Color color) onTriggerParentAppSnackbar;
 
   @override
   State<ParentMapScreen> createState() => _ParentMapScreenState();
@@ -37,7 +37,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
         Marker(markerId: MarkerId('home'), position: newLocation),
       );
     });
-  }
+  } 
   // invoking these method will update parent-map-screen
   // purpose: allow their children to trigger updating there parent state
   void updateParentState() {

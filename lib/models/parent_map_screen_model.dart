@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tamdan_kon_mobile_flutter/services/attendance_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/location_service.dart';
@@ -19,7 +20,7 @@ class ParentMapScreenModel {
   // this method is user to trigger the parent-map screen to update the location on map
   final void Function(LatLng newLocation) onUpdateBusLocation;
   // store parent-map-screen on get snack-bar to trigger it later to show the error message
-  final void Function(String error) onTriggerSnackBar;
+  final void Function(String message, Color color) onTriggerSnackBar;
   // map controller
   late GoogleMapController mapController;
   // is loading
@@ -77,7 +78,7 @@ class ParentMapScreenModel {
       }
     } else {
       // trigger the snackbar in parent-map-screen to show the get_bus_status error
-      onTriggerSnackBar(locationService.error!);
+      onTriggerSnackBar(locationService.error!, Colors.red);
     }
   }
 
@@ -94,7 +95,7 @@ class ParentMapScreenModel {
 
     } else {
       // trigger the snackbar in parent-map-screen to show the get_bus_status error
-      onTriggerSnackBar(locationService.error!);
+      onTriggerSnackBar(locationService.error!, Colors.red);
     }
   }
 
@@ -126,7 +127,7 @@ class ParentMapScreenModel {
       error = studentInfoService.error;
       // trigger the snack-bar to get error message
       Timer(Duration(seconds: 2), (){
-        onTriggerSnackBar(error!);
+        onTriggerSnackBar(error!, Colors.red);
       });
     }
 

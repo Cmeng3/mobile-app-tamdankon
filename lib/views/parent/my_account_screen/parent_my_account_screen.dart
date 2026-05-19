@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/user_avatar.dart';
@@ -11,18 +13,26 @@ class ParentMyAccountScreen extends StatefulWidget {
     super.key,
     required this.user,
     required this.onRootScreenChange,
+    required this.onTriggerParentScreenSnackBar,
+    required this.onUpdateAppbarUsername
   });
 
   // get the user information
   final Map<String, String> user;
   // root-screen-switcher
   final void Function(String rootScreen) onRootScreenChange;
+  // trigger parent-screen snackbar
+  final void Function(String message, Color color) onTriggerParentScreenSnackBar;
+  // trigger parent-screen state to change, reflect to the change of username
+  final void Function(String username) onUpdateAppbarUsername;
   @override
   State<ParentMyAccountScreen> createState() =>
       _ParentMyAccountScreenState();
 }
 
 class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
+  // logout delay animation
+  bool isLogoutLoading = false;
   // formkey
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   // obscure text
@@ -33,6 +43,18 @@ class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
       obscureText = !obscureText;
     });
   }
+  //
+  void updateStateAndUserInfo(String data, String currentEditField) {
+    if(currentEditField == 'username') {
+      widget.user['username'] = data;
+    } else if(currentEditField == 'email') {
+      widget.user['email'] = data;
+    } else if (currentEditField == 'phoneNumber') {
+      widget.user['phone_number'] = data;
+    }
+    // update the parent-my-account-screen state
+    setState(() {});
+  }
   // let child trigger a change in parent-state
   void changeParentState() {
     setState(() {});
@@ -40,11 +62,16 @@ class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
   //
   late ParentMyAccountScreenModel parentMyAccountScreenModel = ParentMyAccountScreenModel(
     formKey: _formkey,
+    onTriggerParentScreenSnackbar: widget.onTriggerParentScreenSnackBar,
+    onUpdateAppbarUsername: widget.onUpdateAppbarUsername,
+    onUpdateParentStateInfo: updateStateAndUserInfo,
     onParentStateChange: changeParentState,
+    userId: (widget.user['id']) as String,
+
   );
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return isLogoutLoading? const Center(child: CircularProgressIndicator()) : SafeArea(
         child: SingleChildScrollView(
           // this make the space for the elements inside fo the singleChildScrollView()
           padding: const EdgeInsets.all(20),
@@ -116,8 +143,8 @@ class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
               // buildInfoTile style the user Account-Information
               AccountInfoTile(
                 icon: Icons.person_outline,
-                title: (widget.user['username']) as String,
-                value: 'Kunnarak',
+                title: 'username',
+                value: (widget.user['username']) as String,
                 editLock: parentMyAccountScreenModel.isEditingLock,
                 formKey: parentMyAccountScreenModel.formKey,
                 isEditing: parentMyAccountScreenModel.editUsername,
@@ -183,8 +210,14 @@ class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
                 height: 58,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // logout user
-                    logoutUser(widget.onRootScreenChange, 'login-screen');
+                    // display loading
+                    setState(() {
+                      isLogoutLoading = true;
+                    });
+                    Timer(Duration(milliseconds: 250), () {
+                      // logout user
+                      logoutUser(widget.onRootScreenChange, 'login-screen');
+                    });
                   },
                   icon: const Icon(Icons.logout),
                   label: const AppText(

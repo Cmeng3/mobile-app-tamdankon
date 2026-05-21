@@ -53,7 +53,10 @@ class ParentScreenModel {
         onTriggerParentAppSnackbar: onTriggerUserAppSnackBar,
       ),
       ParentAttendanceScreen(parentId: id!),
-      ParentChatScreen(),
+      ParentChatScreen(
+        parentId: id!,
+        onTriggerParentSnackbar: onTriggerUserAppSnackBar,
+      ),
       // this field need alot of parent-state-management method
       // reason: because this screen allow user to update their information
       ParentMyAccountScreen(

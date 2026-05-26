@@ -97,6 +97,12 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                 height: 350,
                 // displaying the goolge map view
                 child: GoogleMap(
+                  onTap: (LatLng c) { 
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Scaffold(appBar: AppBar(title: Text('hello'))))
+                    );
+                   },
                   onMapCreated: (GoogleMapController mapController) {
                     parentMapScreenModel.mapController = mapController;
                   },

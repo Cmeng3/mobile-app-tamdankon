@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
-import 'package:tamdan_kon_mobile_flutter/components/parent_bottom_navbar.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_screen_components/parent_bottom_navbar.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
 import 'package:tamdan_kon_mobile_flutter/models/parent_screen_model.dart';
 

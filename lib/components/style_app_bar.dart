@@ -59,11 +59,21 @@ class StyleAppBar extends StatelessWidget implements PreferredSizeWidget{
         ),
         // in action here, we styling a badge for indicate of user role
         actions: [
-          // designing a badge that showing the user's role
-          AppBadge(
+          if(role == 'parent') AppBadge(
             role, 
             color: Colors.blue, 
             shadeColor: Colors.blue.shade50
+          )
+          // designing a badge that showing the user's role
+          else if(role == 'driver') AppBadge(
+            role, 
+            color: const Color.fromARGB(255, 82, 187, 85), 
+            shadeColor: const Color.fromARGB(135, 76, 175, 80)
+          )
+          else AppBadge(
+            role, 
+            color: const Color.fromARGB(255, 255, 255, 0), 
+            shadeColor: const Color.fromARGB(135, 255, 255, 0)
           )
         ],
       );

@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-void logoutUser(Function onRootScreenChange, String rootScreen) async {
+void logoutUser(Function onRootScreenChange) async {
   // instantiate sharePreferences class
   // purpose: removing all user credential, which sotre in local-storage, when they logout
   final SharedPreferences prefs = await SharedPreferences.getInstance();

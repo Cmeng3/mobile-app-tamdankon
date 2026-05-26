@@ -216,7 +216,7 @@ class _ParentMyAccountScreenState extends State<ParentMyAccountScreen> {
                     });
                     Timer(Duration(milliseconds: 250), () {
                       // logout user
-                      logoutUser(widget.onRootScreenChange, 'login-screen');
+                      logoutUser(widget.onRootScreenChange);
                     });
                   },
                   icon: const Icon(Icons.logout),

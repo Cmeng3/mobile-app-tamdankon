@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (userRole == 'parent') {
         widget.onRootScreenChange('parent_screen');
       } else if (userRole == 'driver') {
-        widget.onRootScreenChange('drive_screen');
+        widget.onRootScreenChange('driver_screen');
       } else {
         widget.onRootScreenChange('admin_screen');
       }

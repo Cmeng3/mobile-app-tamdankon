@@ -59,7 +59,6 @@ class ParentChatScreenModel {
   // get the stream of messages
   void getStreamMessages(Timer timer) async{
     if(await chatService.getParentAndDriverMessages()) {
-      print('I am polling the messages right now');
       // store a new present current DateTime
       // force parent-chat-screen to update state
       now = DateTime.now();  

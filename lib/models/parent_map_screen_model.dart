@@ -49,12 +49,12 @@ class ParentMapScreenModel {
     // checking for the bus status
     // active (1) : the driver is ready to allow parent to see the bus on the map
     // inactive (0) : contrast from above statement
-    if(await locationService.getBusStatus()){
+    if(await locationService.getBusStatus(busId!)){
       //  get and extract the bus-status from response body
       Map<String, dynamic> statusData = locationService.getResponseParse();
       int busStatus = statusData['bus_status'] as int;
       // check for bus-active-status and then check for success of getLocation api-call
-      if(busStatus == 1 && await locationService.getLocation()) {
+      if(busStatus == 1 && await locationService.getLocation(busId!)) {
         // if the above condition is pass, it mean bus is active
         // so we start to get the location from the bus
         isBusActive = true;
@@ -103,9 +103,9 @@ class ParentMapScreenModel {
   // those info will later use to fetch another information
   // such as, bus-status, bus-location and studentAttendance
   void getStudentInfo() async {
-    StudentInfoService studentInfoService = StudentInfoService(parentId: parentId);
+    StudentInfoService studentInfoService = StudentInfoService();
     // get the student-info by doing http request
-    if(await studentInfoService.getStudentInfo()){
+    if(await studentInfoService.getStudentInfo(parentId)){
       Map<String, Object?> studentInfo = studentInfoService.getResponseParse();
       Map<String, dynamic> studnetData = studentInfo['data'] as Map<String, dynamic>;
       // get and extract student info from response string
@@ -118,7 +118,7 @@ class ParentMapScreenModel {
       attendanceStatus = studentInfo['attendance_status'] as String;
       // after student infomation fetch successfully, let open the timer-polling
       // purpose: to continue requesting bus-locations information and student-attendance status
-      locationService = LocationService(busNumber: busId!);
+      locationService = LocationService();
       attendanceService = AttendanceService(studentId: studentId!);
       // store timer-polling object, to destroy it later, when parent-map-screen dispose
       getLocationTimer = Timer.periodic(Duration(seconds: 2), getStreamLocation);

@@ -67,6 +67,9 @@ flutter:
   assets:
     - assets/images/tamdan_kon_logo.jpg
     - assets/images/user.png
+    - assets/images/green_marker.png
+    - assets/images/orange_marker.png
+    - assets/images/student.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

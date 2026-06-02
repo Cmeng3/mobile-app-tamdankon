@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
-import 'package:tamdan_kon_mobile_flutter/composable/logout_user.dart';
 import 'package:tamdan_kon_mobile_flutter/models/driver_screen_model.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/driver_bottom_nav_bar.dart';
 
@@ -24,17 +24,28 @@ class _DriverScreenState extends State<DriverScreen> {
       currentScreen = screenIndex;
     });
   }
-
-  //
+  // trigger the driver-screen state to change
   void onDriverScreenStateChange() {
     // will implement this later
     setState(() {});
+  }
+  // get trigger parent-screen to show snackbar
+  void getSnackBar(String message, Color color) {
+    final snackBar = SnackBar(
+            backgroundColor: color,
+            content: Center(child: AppText(message)),
+          );
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   // driverScreenModel control driver-screen all its logic and data
   late DriverScreenModel driverScreenModel = DriverScreenModel(
     // we will implement essential parameter here
+    triggerDriverSnackBar: getSnackBar,
     onUpdateDriverState: onDriverScreenStateChange,
+    onRootScreenChange: widget.onRootScreenChange
   );
 
   @override
@@ -61,13 +72,6 @@ class _DriverScreenState extends State<DriverScreen> {
           bottomNavigationBar: DriverBottomNavbar(
             onDriverScreenChange: onDriverScreenChange,
             currentScreen: currentScreen,
-          ),
-          floatingActionButton: IconButton(
-            onPressed: () {
-              logoutUser(widget.onRootScreenChange);
-            },
-            style: IconButton.styleFrom(backgroundColor: Colors.red),
-            icon: Icon(Icons.logout, color: Colors.white),
           ),
         );
   }

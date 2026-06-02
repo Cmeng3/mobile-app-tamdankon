@@ -32,11 +32,11 @@ class DriverBottomNavbar extends StatelessWidget{
             // all parent-screens destinations
             destinations: const [
               NavigationDestination(
-                icon:Icon(Icons.map,), 
+                icon:Icon(Icons.pin_drop,), 
                 label: 'route',
               ),
               NavigationDestination(
-                icon: Icon(Icons.list), 
+                icon: Icon(Icons.escalator_warning), 
                 label: 'students',
               ),
               NavigationDestination(

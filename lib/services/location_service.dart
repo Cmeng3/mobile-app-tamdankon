@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 
 class LocationService {
-  LocationService({required this.busNumber});
+  LocationService();
 
-  final int busNumber;
   String? error;
   String? responseBody;
   // get bus location
-  Future<bool> getLocation() async {
+  Future<bool> getLocation(int busNumber) async {
     //specific bus number
     final Map<String, String> data = {'busId': busNumber.toString()};
     // fetch that specific bus number location
@@ -21,7 +20,7 @@ class LocationService {
     );
   }
 
-  Future<bool> getBusStatus() async {
+  Future<bool> getBusStatus(int busNumber) async {
     //specific bus number
     final Map<String, String> data = {'busId': busNumber.toString()};
     // fetch specific bus status

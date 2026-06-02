@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 
 class StudentInfoService {
-  StudentInfoService({required this.parentId});
+  StudentInfoService();
   // store the parentId for query student info
-  final int parentId;
 
   String? error;
   String? responseBody;
   // get student information
-  Future<bool> getStudentInfo() async {
+  Future<bool> getStudentInfo(int parentId) async {
     //specific bus number
     final Map<String, String> data = {'parentId': parentId.toString()};
     // handlePostRequest is the Future<bool> function that handle the http-post request
@@ -24,13 +23,25 @@ class StudentInfoService {
   }
 
   //get a studentId
-  Future<bool> getStudentId() async {
+  Future<bool> getStudentId(int parentId) async {
     final Map<String, String> data = {'parentId': parentId.toString()};
 
     return await handlePostRequest(
       onGetError: getError,
       onGetResponse: getResponseBody,
       prefix: 'student/id',
+      data: data,
+    );
+  }
+
+  //
+  Future<bool> getStudentsInfoInBus(int driverId) async {
+    final Map<String, String> data = {'driverId': driverId.toString()};
+
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponseBody,
+      prefix: 'student/bus',
       data: data,
     );
   }

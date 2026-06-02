@@ -71,9 +71,9 @@ class ParentAttendanceScreenModel {
   }
   // get student attendances
   void getStudentAttendances() async{
-    StudentInfoService studentInfoService = StudentInfoService(parentId: parentId);
+    StudentInfoService studentInfoService = StudentInfoService();
     // doing api-called to get student id
-    if(await studentInfoService.getStudentId()){
+    if(await studentInfoService.getStudentId(parentId)){
       // extract the student id from response body and store it in studentId
       Map<String, dynamic> res = studentInfoService.getResponseParse();
       int studentId = res['student_id'];

@@ -74,7 +74,10 @@ class DriverScreenModel {
         driverId : id!,
       ),
       DriverStudentsScreen(),
-      DriverChatScreen(),
+      DriverChatScreen(
+        driverId: id!,
+        triggerDriverSnackBar: triggerDriverSnackBar,
+      ),
       DriverMyAccountScreen(
         user: userParse(),
         triggerDriverSnackBar : triggerDriverSnackBar,
@@ -82,7 +85,7 @@ class DriverScreenModel {
       )
     ];
   }
-
+  // parse the driver-information into Map<String, String> format
   Map<String, String> userParse() {
     Map<String, String> data = {
       'id' : id.toString(),

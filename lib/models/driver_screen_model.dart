@@ -76,8 +76,20 @@ class DriverScreenModel {
       DriverStudentsScreen(),
       DriverChatScreen(),
       DriverMyAccountScreen(
+        user: userParse(),
+        triggerDriverSnackBar : triggerDriverSnackBar,
         onRootScreenChange: onRootScreenChange
       )
     ];
+  }
+
+  Map<String, String> userParse() {
+    Map<String, String> data = {
+      'id' : id.toString(),
+      'username' :username!,
+      'email' : email!,
+      'phone_number' : phoneNumber!,
+    };
+    return data;
   }
 }

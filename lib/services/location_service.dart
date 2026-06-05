@@ -8,9 +8,9 @@ class LocationService {
   String? error;
   String? responseBody;
   // get bus location
-  Future<bool> getLocation(int busNumber) async {
+  Future<bool> getLocation(int busId) async {
     //specific bus number
-    final Map<String, String> data = {'busId': busNumber.toString()};
+    final Map<String, String> data = {'busId': busId.toString()};
     // fetch that specific bus number location
     return await handlePostRequest(
       onGetError: getError,
@@ -19,15 +19,22 @@ class LocationService {
       data: data,
     );
   }
+  // store the bus location
+  Future<bool> storeBusLocation({
+    required double latitude,
+    required double longitude,
+    required int busId,
+  }) async {
+    final Map<String, String> data = {
+      'latitude': latitude.toString(),
+      'longitude': longitude.toString(),
+      'busId': busId.toString(),
+    };
 
-  Future<bool> getBusStatus(int busNumber) async {
-    //specific bus number
-    final Map<String, String> data = {'busId': busNumber.toString()};
-    // fetch specific bus status
     return await handlePostRequest(
       onGetError: getError,
       onGetResponse: getResponse,
-      prefix: 'bus/status',
+      prefix: 'bus/location/create',
       data: data,
     );
   }
@@ -39,6 +46,7 @@ class LocationService {
   void getError(String e) {
     error = e;
   }
+
   Map<String, dynamic> getResponseParse() {
     return jsonDecode(responseBody!);
   }

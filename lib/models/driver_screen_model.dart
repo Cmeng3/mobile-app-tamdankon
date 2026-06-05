@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tamdan_kon_mobile_flutter/composable/checking_location_permission.dart';
 import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_chat_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/driver/driver_my_account_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/driver/driver_my_account_screen/driver_my_account_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_route_screen/driver_route_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_students_screen.dart';
 
@@ -25,6 +26,8 @@ class DriverScreenModel {
   List<Widget> driverScreens = [];
 
   // property that control the state of driver-screen
+  // problem screen index, use for temporary navigate to temporary error screen
+  int temScreenIndex = 0;
   // method that trigger the driver-screen snackbar
   final void Function(String message, Color color) triggerDriverSnackBar;
   // trigger to updated the driver-screen state
@@ -52,6 +55,11 @@ class DriverScreenModel {
     } else {
       triggerDriverSnackBar(busService.error!, Colors.red);
     }
+    // checking the user location-service and location-permission
+    // promt them to turn location-permission on if it not enable
+    // later in future, we will handle the app to another temporary screen, if user location-service and location-permission isn't enable
+    // plus(future work): continues checking for location-service during user using the app
+    await checkingLocationPermission();
     // get the parent screen with initail value
     getDriverScreens();
     isLoading = !isLoading;

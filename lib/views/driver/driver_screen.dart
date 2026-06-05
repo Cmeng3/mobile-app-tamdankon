@@ -3,6 +3,7 @@ import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
 import 'package:tamdan_kon_mobile_flutter/models/driver_screen_model.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/driver_bottom_nav_bar.dart';
+import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/location_unavailable_screen.dart';
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key, required this.onRootScreenChange});
@@ -24,17 +25,19 @@ class _DriverScreenState extends State<DriverScreen> {
       currentScreen = screenIndex;
     });
   }
+
   // trigger the driver-screen state to change
   void onDriverScreenStateChange() {
     // will implement this later
     setState(() {});
   }
+
   // get trigger parent-screen to show snackbar
   void getSnackBar(String message, Color color) {
     final snackBar = SnackBar(
-            backgroundColor: color,
-            content: Center(child: AppText(message)),
-          );
+      backgroundColor: color,
+      content: Center(child: AppText(message)),
+    );
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -45,7 +48,7 @@ class _DriverScreenState extends State<DriverScreen> {
     // we will implement essential parameter here
     triggerDriverSnackBar: getSnackBar,
     onUpdateDriverState: onDriverScreenStateChange,
-    onRootScreenChange: widget.onRootScreenChange
+    onRootScreenChange: widget.onRootScreenChange,
   );
 
   @override
@@ -64,11 +67,14 @@ class _DriverScreenState extends State<DriverScreen> {
             username: driverScreenModel.username!,
             role: driverScreenModel.role!,
           ),
-          body: IndexedStack(
-            // all List<driver_screens>
-            index: currentScreen,
-            children: driverScreenModel.driverScreens,
-          ),
+          body:
+              driverScreenModel.temScreenIndex == 0
+                  ? IndexedStack(
+                    // all List<driver_screens>
+                    index: currentScreen,
+                    children: driverScreenModel.driverScreens,
+                  )
+                  : LocationUnavailableScreen(),
           bottomNavigationBar: DriverBottomNavbar(
             onDriverScreenChange: onDriverScreenChange,
             currentScreen: currentScreen,

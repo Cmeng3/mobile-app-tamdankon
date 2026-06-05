@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_radio.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_fab.dart';
 import 'package:tamdan_kon_mobile_flutter/models/driver_route_screen_model.dart';
@@ -37,6 +38,7 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
     driverId: widget.driverId,
     onScreenStateChange: getDriverStateChange,
     triggerSnackBar: widget.triggerDriverSnackBar,
+    context: context,
     busId: widget.busId
   );
 
@@ -50,6 +52,8 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
   void dispose(){
     // cancel the polling-timer
     driverRouteScreenModel.getStudentsInfoTimer!.cancel();
+    // cancel the positionStream
+    driverRouteScreenModel.positionStream.cancel();
     super.dispose();
   }
 
@@ -63,11 +67,17 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
           GoogleMap(
             zoomControlsEnabled: false,
             myLocationButtonEnabled: false,
+            polylines: driverRouteScreenModel.polyline,
             initialCameraPosition: CameraPosition(
               target: initialPosition,
               zoom: 13,
             ),
-            markers: driverRouteScreenModel.studentMarkers,
+            markers: { 
+              driverRouteScreenModel.busLocation,
+              driverRouteScreenModel.schoolLocation,
+              ...driverRouteScreenModel.studentLocations
+            },
+            // markers: driverRouteScreenModel.allLocationsMarker,
           ),
           // Position the FAB on bottom-left of the screen
           Positioned(
@@ -129,13 +139,39 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
                 const SizedBox(height: 14),
                 // Tooltip 2#: wrap the start-route-navigation FAB button
                 // purpose: start the route
+                if(driverRouteScreenModel.busLocationResource == 'none')
                 Tooltip(
                   message: 'Start route navigation',
                   child: StyleFab(
                     icon: Icons.play_arrow_rounded,
                     backgroundColor: Colors.blue,
                     iconColor: Colors.white,
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(context: context, builder: (context) {
+                        return AlertDialog(
+                          title: AppText('Please Choose which we going to collect location from!', color: Colors.black),
+                          content: AppRadio(getLocationChoice: (choice) {
+                            driverRouteScreenModel.busLocationResource = choice;
+                            driverRouteScreenModel.updateBusStatus();
+                            setState(() {});
+                          }),
+                        );
+                      });
+                    },
+                  ),
+                ),
+                if(driverRouteScreenModel.busLocationResource != 'none')
+                Tooltip(
+                  message: 'Start route navigation',
+                  child: StyleFab(
+                    icon: Icons.play_arrow_rounded,
+                    backgroundColor: Colors.red,
+                    iconColor: Colors.white,
+                    onTap: () {
+                      driverRouteScreenModel.busLocationResource = 'none';
+                      driverRouteScreenModel.updateBusStatus();
+                      setState(() {});
+                    },
                   ),
                 ),
               ],

@@ -70,6 +70,8 @@ flutter:
     - assets/images/green_marker.png
     - assets/images/orange_marker.png
     - assets/images/student.png
+    - assets/images/school_marker.png
+    - assets/images/bus.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

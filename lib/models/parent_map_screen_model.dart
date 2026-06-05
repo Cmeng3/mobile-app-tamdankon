@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tamdan_kon_mobile_flutter/services/attendance_service.dart';
+import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/location_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/student_info_service.dart';
 
@@ -42,6 +43,7 @@ class ParentMapScreenModel {
   Timer? getLocationTimer;
   Timer? getAttendanceStatusTimer;
   // we will insert the bus-number later during this implementation
+  BusService busService = BusService();
   late LocationService locationService;
   late AttendanceService attendanceService;
   // get Stream location function
@@ -49,9 +51,9 @@ class ParentMapScreenModel {
     // checking for the bus status
     // active (1) : the driver is ready to allow parent to see the bus on the map
     // inactive (0) : contrast from above statement
-    if(await locationService.getBusStatus(busId!)){
+    if(await busService.getBusStatus(busId!)){
       //  get and extract the bus-status from response body
-      Map<String, dynamic> statusData = locationService.getResponseParse();
+      Map<String, dynamic> statusData = busService.getResponseParse();
       int busStatus = statusData['bus_status'] as int;
       // check for bus-active-status and then check for success of getLocation api-call
       if(busStatus == 1 && await locationService.getLocation(busId!)) {

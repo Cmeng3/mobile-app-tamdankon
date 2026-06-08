@@ -34,14 +34,41 @@ class StudentInfoService {
     );
   }
 
-  //
-  Future<bool> getStudentsInfoInBus(int driverId) async {
+  // get all student on the bus
+  Future<bool> getAllStudentOnBus(int driverId) async {
+    final Map<String, String> data = {'driverId': driverId.toString()};
+
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponseBody,
+      prefix: 'student/info/bus',
+      data: data,
+    );
+  }
+
+  // get students on the bus Today
+  Future<bool> getStudentsInfoOnBusToday(int driverId) async {
     final Map<String, String> data = {'driverId': driverId.toString()};
 
     return await handlePostRequest(
       onGetError: getError,
       onGetResponse: getResponseBody,
       prefix: 'student/bus',
+      data: data,
+    );
+  }
+
+  // update the student location
+  Future<bool> updateStudentLocation(int studentId, String latlng) async {
+    final Map<String, String> data = {
+      'studentId': studentId.toString(),
+      'latlng': latlng,
+    };
+
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponseBody,
+      prefix: 'student/update/location',
       data: data,
     );
   }

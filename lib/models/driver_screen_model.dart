@@ -5,7 +5,7 @@ import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_my_account_screen/driver_my_account_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_route_screen/driver_route_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/driver/driver_students_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/driver/driver_students_screen/driver_students_screen.dart';
 
 class DriverScreenModel {
   DriverScreenModel({
@@ -73,7 +73,10 @@ class DriverScreenModel {
         busId : busId,
         driverId : id!,
       ),
-      DriverStudentsScreen(),
+      DriverStudentsScreen(
+        driverId: id!,
+        triggerDriverSnackBar: triggerDriverSnackBar,
+      ),
       DriverChatScreen(
         driverId: id!,
         triggerDriverSnackBar: triggerDriverSnackBar,

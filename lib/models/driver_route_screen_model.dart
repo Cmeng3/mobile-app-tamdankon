@@ -241,6 +241,7 @@ class DriverRouteScreenModel {
   void getBusPolyline(Timer timer) async {
     if (busLocationResource == 'none') {
       polyline = {};
+      onScreenStateChange();
     } else {
       if (await routeService.getBusPolyline(busId!)) {
         Map<String, dynamic> res = routeService.getResponseParse();
@@ -254,6 +255,7 @@ class DriverRouteScreenModel {
               points: googlemapPolylineDecoder(encodedPolyline),
             ),
           };
+          triggerSnackBar('successfully get the route', Colors.green);
         }
       } else {
         triggerSnackBar(routeService.error!, Colors.red);
@@ -264,7 +266,7 @@ class DriverRouteScreenModel {
 
   // fetching students from each specific bus
   Future<void> getAndExtractStudentsInfoOnBus(Timer timer) async {
-    if (await studentInfoService.getStudentsInfoInBus(driverId)) {
+    if (await studentInfoService.getStudentsInfoOnBusToday(driverId)) {
       // get the list of students from the response
       Map<String, dynamic> res = studentInfoService.getResponseParse();
       List<Map<String, dynamic>> studentsList = List<Map<String, dynamic>>.from(

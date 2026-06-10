@@ -245,7 +245,7 @@ class DriverRouteScreenModel {
     } else {
       if (await routeService.getBusPolyline(busId!)) {
         Map<String, dynamic> res = routeService.getResponseParse();
-        String encodedPolyline = res['polyline'];
+        String? encodedPolyline = res['polyline'];
         if (encodedPolyline != null) {
           polyline = {
             Polyline(

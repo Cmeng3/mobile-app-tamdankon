@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106709911296",
+    "project_id": "augmented-audio-376612",
+    "storage_bucket": "augmented-audio-376612.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106709911296:android:42c7352db4db697a2d15e5",
+        "android_client_info": {
+          "package_name": "com.example.tamdan_kon_mobile_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-_nYlvRIFveoG0XOR_VagvkukVtSx3C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

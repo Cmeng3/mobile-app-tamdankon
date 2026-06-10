@@ -57,5 +57,4 @@ class DriverStudentsScreenModel {
         triggerDriverSnackBar(studentInfoService.error!, Colors.red);
       }
   }
-
 }

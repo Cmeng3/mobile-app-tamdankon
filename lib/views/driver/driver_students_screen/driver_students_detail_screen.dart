@@ -14,6 +14,7 @@ class DriverStudentsDetailScreen extends StatefulWidget {
     required this.isLocationSet,
     required this.locationSettings,
     required this.onUpdateLocation,
+    required this.onGetLatestStudent,
   });
 
   final String studentName;
@@ -24,6 +25,7 @@ class DriverStudentsDetailScreen extends StatefulWidget {
   final bool isLocationSet;
   final LocationSettings locationSettings;
   final void Function(int studentId, String latlng) onUpdateLocation; 
+  final void Function() onGetLatestStudent;
 
   @override
   State<DriverStudentsDetailScreen> createState() => _DriverStudentsDetailScreenState();
@@ -37,7 +39,6 @@ class _DriverStudentsDetailScreenState extends State<DriverStudentsDetailScreen>
   // loading the location
   void getCurrentLocation() async {
     busCurrentLocation = await Geolocator.getCurrentPosition(locationSettings: widget.locationSettings);
-    print('location: ${busCurrentLocation.latitude}, ${busCurrentLocation.longitude}');
     isLoading = false;
     setState(() {});
   }
@@ -133,6 +134,7 @@ class _DriverStudentsDetailScreenState extends State<DriverStudentsDetailScreen>
                               TextButton(
                                 onPressed: () async{
                                   widget.onUpdateLocation(widget.studentId, '${busCurrentLocation.latitude}, ${busCurrentLocation.longitude}');
+                                  widget.onGetLatestStudent();
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 },

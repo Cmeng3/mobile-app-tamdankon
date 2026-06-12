@@ -90,13 +90,9 @@ class DriverMyAccountScreenModel {
       formKey.currentState!.save();
       // we will implement this in future
       // after we finish api-endpoint implementation
-      UserService userService = UserService(
-        userId: userId,
-        updateField: currentEditing,
-        updateData: getCurrentUpdateData(),
-      );
+      UserService userService = UserService();
 
-      if(await userService.getUpdateUser()){
+      if(await userService.getUpdateUser(userId, getCurrentUpdateData(), currentEditing)){
         // we will write the edit data to the local storage
         // also trigger the change in parent-screen and parent-my-account-screen
         // instantiate the sharedpreferences object

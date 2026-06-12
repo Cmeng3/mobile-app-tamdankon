@@ -5,6 +5,17 @@ import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 class BusService {
   String? error;
   String? responseBody;
+
+  //
+  Future<bool> getAllBus() async {
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponse,
+      prefix: 'bus/all',
+      data: {},
+    );
+  }
+
   // get the current bus-Id
   Future<bool> getBusId(int driverId) async {
     Map<String, String> data = {'driverId': driverId.toString()};
@@ -32,13 +43,9 @@ class BusService {
 
   // update the bus-status
   // get the current bus-status
-  Future<bool> updateBusStatus({
-    required int driverId,
-  }) async {
+  Future<bool> updateBusStatus({required int driverId}) async {
     //specific bus number
-    final Map<String, String> data = {
-      'driverId': driverId.toString(),
-    };
+    final Map<String, String> data = {'driverId': driverId.toString()};
     // fetch specific bus-status
     return await handlePostRequest(
       onGetError: getError,

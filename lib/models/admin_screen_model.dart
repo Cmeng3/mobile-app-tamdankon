@@ -5,13 +5,15 @@ import 'package:tamdan_kon_mobile_flutter/views/admin/admin_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_drivers_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_manage_route_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_my_account_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/admin/admin_parents_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/admin/admin_parents_screen/admin_parents_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_search_screen.dart';
 
 class AdminScreenModel {
   AdminScreenModel({
     required this.onScreenStateChange,
     required this.onGetCurrentScreen,
+    required this.onTriggerSnackBar,
+    required this.onRootScreenChange,
   });
 
   // user's information
@@ -28,6 +30,9 @@ class AdminScreenModel {
   // control screen state
   final void Function() onScreenStateChange;
   final void Function(int screenIndex) onGetCurrentScreen;
+  final void Function(String message, Color color) onTriggerSnackBar;
+   // trigger to switching root-screen
+  final void Function(String rootScreen) onRootScreenChange;
 
   // method that fetching user's information from local-storage
   Future<void> getUserInfo() async{
@@ -51,13 +56,15 @@ class AdminScreenModel {
   // get the parent screen with initial value
   void getParentScreens() {
      adminScreens = [
-      AdminParentsScreen(),
+      AdminParentsScreen(onTriggerSnackBar: onTriggerSnackBar,),
       AdminDriversScreen(),
       AdminSearchScreen(onGetCurrentScreen: onGetCurrentScreen,),
       AdminChatScreen(),
       AdminAttendanceScreen(),
       AdminManageRouteScreen(),
-      AdminMyAccountScreen(),
+      AdminMyAccountScreen(
+        onRootScreenChange: onRootScreenChange,
+      ),
     ];
   }
 

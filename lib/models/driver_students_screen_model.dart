@@ -57,4 +57,15 @@ class DriverStudentsScreenModel {
         triggerDriverSnackBar(studentInfoService.error!, Colors.red);
       }
   }
+
+  void getLatestStudenInfo() async{
+    if(await studentInfoService.getAllStudentOnBus(driverId)){
+        Map<String, dynamic> res = studentInfoService.getResponseParse();
+        filterStudentsList = students = List<Map<String, dynamic>>.from(res['students']);
+    } else {
+      triggerDriverSnackBar(studentInfoService.error!, Colors.red);
+    }
+
+    onScreenStateChange();
+  }
 }

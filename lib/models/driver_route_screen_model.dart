@@ -255,7 +255,6 @@ class DriverRouteScreenModel {
               points: googlemapPolylineDecoder(encodedPolyline),
             ),
           };
-          triggerSnackBar('successfully get the route', Colors.green);
         }
       } else {
         triggerSnackBar(routeService.error!, Colors.red);

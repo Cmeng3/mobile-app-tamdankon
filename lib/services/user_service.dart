@@ -1,20 +1,28 @@
+import 'dart:convert';
+
 import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 
 class UserService {
-  UserService({
-    required this.userId,
-    required this.updateData,
-    required this.updateField,
-  });
-  // field used for query the user-info
-  final String userId;
-  final String updateData;
-  final String updateField;
+  UserService();
   //
   String? error;
   String? responseBody;
+  //
+  Future<bool> getAllParents() async {
+    return await handlePostRequest(
+      onGetError: onGetError,
+      onGetResponse: onGetResponse,
+      prefix: 'parent',
+      data: {},
+    );
+  }
 
-  Future<bool> getUpdateUser() async {
+  // get update the user-info
+  Future<bool> getUpdateUser(
+    String userId,
+    String updateData,
+    String updateField,
+  ) async {
     Map<String, String> data = {
       'userId': userId,
       'updateData': updateData,
@@ -28,16 +36,29 @@ class UserService {
       data: data,
     );
   }
-  // 
+
+  //
+  Future<bool> createParentAccount(Map<String, String> data) async {
+    return await handlePostRequest(
+      onGetError: onGetError,
+      onGetResponse: onGetResponse,
+      prefix: 'parent/create',
+      data: data,
+    );
+  }
+
+  //
   void onGetError(String e) {
     error = e;
   }
+
   //
   void onGetResponse(String? response) {
     responseBody = response!;
   }
-  //
-  void getResponseParse() {
 
+  //
+  Map<String, dynamic> getResponseParse() {
+    return jsonDecode(responseBody!);
   }
 }

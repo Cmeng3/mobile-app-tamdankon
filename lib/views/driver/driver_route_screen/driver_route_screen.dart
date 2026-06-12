@@ -53,7 +53,7 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
     // cancel the polling-timer
     driverRouteScreenModel.getStudentsInfoTimer!.cancel();
     // cancel the positionStream
-    driverRouteScreenModel.positionStream.cancel();
+    driverRouteScreenModel.getBusPolylineTimer!.cancel();
     super.dispose();
   }
 

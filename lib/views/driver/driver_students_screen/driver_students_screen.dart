@@ -131,6 +131,7 @@ class _DriverStudentsScreenState extends State<DriverStudentsScreen> {
                                 isLocationSet: student['latlng'] != null,
                                 locationSettings: driverStudentsScreenModel.locationSetting,
                                 onUpdateLocation: driverStudentsScreenModel.updateStudentLocation,
+                                onGetLatestStudent: driverStudentsScreenModel.getLatestStudenInfo,
                               );
                             });
                             

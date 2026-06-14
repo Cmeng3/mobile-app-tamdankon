@@ -94,7 +94,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                   borderRadius: BorderRadius.circular(18),
                 ),
                 margin: EdgeInsets.all(3),
-                height: 350,
+                height: MediaQuery.of(context).size.height * 0.5,
                 // displaying the goolge map view
                 child: GoogleMap(
                   onTap: (LatLng c) { 

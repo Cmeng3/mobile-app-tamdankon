@@ -67,15 +67,16 @@ class _DriverScreenState extends State<DriverScreen> {
             username: driverScreenModel.username!,
             role: driverScreenModel.role!,
           ),
-          body:
-              driverScreenModel.temScreenIndex == 0
-                  ? IndexedStack(
+          body:[
+              IndexedStack(
                     // all List<driver_screens>
                     index: currentScreen,
                     children: driverScreenModel.driverScreens,
-                  )
-                  : LocationUnavailableScreen(),
+                  ),
+              LocationUnavailableScreen(),
+          ][driverScreenModel.temScreenIndex],
           bottomNavigationBar: DriverBottomNavbar(
+          
             onDriverScreenChange: onDriverScreenChange,
             currentScreen: currentScreen,
           ),

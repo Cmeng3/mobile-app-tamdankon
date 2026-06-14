@@ -7,12 +7,22 @@ class UserService {
   //
   String? error;
   String? responseBody;
-  //
+  // get all parents info
   Future<bool> getAllParents() async {
     return await handlePostRequest(
       onGetError: onGetError,
       onGetResponse: onGetResponse,
       prefix: 'parent',
+      data: {},
+    );
+  }
+
+  // get all driver info
+  Future<bool> getAllDrivers() async {
+    return await handlePostRequest(
+      onGetError: onGetError,
+      onGetResponse: onGetResponse,
+      prefix: 'driver',
       data: {},
     );
   }
@@ -37,12 +47,21 @@ class UserService {
     );
   }
 
-  //
+  // create the parent account
   Future<bool> createParentAccount(Map<String, String> data) async {
     return await handlePostRequest(
       onGetError: onGetError,
       onGetResponse: onGetResponse,
       prefix: 'parent/create',
+      data: data,
+    );
+  }
+  // 
+  Future<bool> createDriverAccount(Map<String, String> data) async {
+    return await handlePostRequest(
+      onGetError: onGetError,
+      onGetResponse: onGetResponse,
+      prefix: 'driver/create',
       data: data,
     );
   }

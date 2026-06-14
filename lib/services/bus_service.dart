@@ -6,7 +6,7 @@ class BusService {
   String? error;
   String? responseBody;
 
-  //
+  // get all bus information
   Future<bool> getAllBus() async {
     return await handlePostRequest(
       onGetError: getError,
@@ -37,6 +37,21 @@ class BusService {
       onGetError: getError,
       onGetResponse: getResponse,
       prefix: 'bus/status',
+      data: data,
+    );
+  }
+
+  //
+  Future<bool> assignDriverABus(int driverId, int busId) async {
+    Map<String, String> data = {
+      'busId': busId.toString(),
+      'driverId': driverId.toString(),
+    };
+    
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponse,
+      prefix: 'bus/assign',
       data: data,
     );
   }

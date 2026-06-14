@@ -25,13 +25,12 @@ class _AdminParentsScreenState extends State<AdminParentsScreen> {
       
     });
   }
-
+  //
   late AdminParentsScreenModel adminParentsScreenModel = AdminParentsScreenModel(
     onScreenStateChange: getStateChange,
     onTriggerSnackBar: widget.onTriggerSnackBar,
   );
-
-  @override
+  
   @override
   void initState() {
     super.initState();
@@ -83,11 +82,6 @@ class _AdminParentsScreenState extends State<AdminParentsScreen> {
                   label: const AppText(
                     'Create Parent Account',
                     color: Colors.white,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
                   ),
                 ),
               ),
@@ -142,8 +136,13 @@ class _AdminParentsScreenState extends State<AdminParentsScreen> {
                           trailing: PopupMenuButton(
                             itemBuilder: (context) => [
                               PopupMenuItem(
-                                value: 'view',
-                                child: Text('View'),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.visibility),
+                                    SizedBox(width: 8),
+                                    Text('View Detail'),
+                                  ],
+                                ),
                                 onTap: () {
                                    showDialog(context: context, builder: (context) {
                                     return ParentDetailScreen(parent: parent,);

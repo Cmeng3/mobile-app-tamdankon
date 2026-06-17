@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_attendance_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_drivers_screen/admin_drivers_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/admin/admin_manage_route_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/admin/admin_manage_route_screen/admin_manage_route_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_my_account_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_parents_screen/admin_parents_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_search_screen.dart';
@@ -61,7 +61,7 @@ class AdminScreenModel {
       AdminSearchScreen(onGetCurrentScreen: onGetCurrentScreen,),
       AdminChatScreen(),
       AdminAttendanceScreen(),
-      AdminManageRouteScreen(),
+      AdminManageRouteScreen(onTriggerSnackBar: onTriggerSnackBar),
       AdminMyAccountScreen(
         onRootScreenChange: onRootScreenChange,
       ),

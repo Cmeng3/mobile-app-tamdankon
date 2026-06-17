@@ -7,12 +7,14 @@ class DriverStudentsScreen extends StatefulWidget {
   const DriverStudentsScreen({
     super.key,
     required this.driverId,
+    required this.busId,
     required this.triggerDriverSnackBar,
   });
 
   //
   final int driverId;
   //
+  final int busId;
   final void Function(String message, Color color) triggerDriverSnackBar;
   @override
   State<DriverStudentsScreen> createState() => _DriverStudentsScreenState();
@@ -30,6 +32,7 @@ class _DriverStudentsScreenState extends State<DriverStudentsScreen> {
       DriverStudentsScreenModel(
         onScreenStateChange: getUpdateScreenState,
         driverId: widget.driverId,
+        busId: widget.busId,
         triggerDriverSnackBar: widget.triggerDriverSnackBar,
       );
 

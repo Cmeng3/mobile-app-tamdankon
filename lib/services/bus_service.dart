@@ -16,6 +16,16 @@ class BusService {
     );
   }
 
+  // get all bus information and the driver
+  Future<bool> getAllBusesAndDrivers() async {
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponse,
+      prefix: 'bus/driver/all',
+      data: {},
+    );
+  }
+
   // get the current bus-Id
   Future<bool> getBusId(int driverId) async {
     Map<String, String> data = {'driverId': driverId.toString()};
@@ -47,7 +57,7 @@ class BusService {
       'busId': busId.toString(),
       'driverId': driverId.toString(),
     };
-    
+
     return await handlePostRequest(
       onGetError: getError,
       onGetResponse: getResponse,
@@ -66,6 +76,17 @@ class BusService {
       onGetError: getError,
       onGetResponse: getResponse,
       prefix: 'bus/status/update',
+      data: data,
+    );
+  }
+
+  // create the bus
+  Future<bool> createBus(String? busName) async {
+    Map<String, String> data = {'busName': busName ?? ''};
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponse,
+      prefix: 'bus/create',
       data: data,
     );
   }

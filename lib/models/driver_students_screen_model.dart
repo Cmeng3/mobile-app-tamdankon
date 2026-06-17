@@ -7,6 +7,7 @@ class DriverStudentsScreenModel {
   DriverStudentsScreenModel({
     required this.onScreenStateChange,
     required this.driverId,
+    required this.busId,
     required this.triggerDriverSnackBar,
   });
   // property use to display in driver-students-screen
@@ -15,6 +16,7 @@ class DriverStudentsScreenModel {
 
   // property use for query data
   final int driverId;
+  final int busId;
   final void Function(String message, Color color) triggerDriverSnackBar;
   final StudentInfoService studentInfoService = StudentInfoService();
   late LocationSettings locationSetting;
@@ -30,7 +32,7 @@ class DriverStudentsScreenModel {
     isLoading = true;
     locationSetting = getLocationSetting();
     // fetching students information from specific bus
-    if(await studentInfoService.getAllStudentOnBus(driverId)){
+    if(await studentInfoService.getAllStudentOnBus(busId)){
         Map<String, dynamic> res = studentInfoService.getResponseParse();
         filterStudentsList = students = List<Map<String, dynamic>>.from(res['students']);
     } else {
@@ -59,7 +61,7 @@ class DriverStudentsScreenModel {
   }
 
   void getLatestStudenInfo() async{
-    if(await studentInfoService.getAllStudentOnBus(driverId)){
+    if(await studentInfoService.getAllStudentOnBus(busId)){
         Map<String, dynamic> res = studentInfoService.getResponseParse();
         filterStudentsList = students = List<Map<String, dynamic>>.from(res['students']);
     } else {

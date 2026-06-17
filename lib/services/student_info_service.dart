@@ -35,8 +35,8 @@ class StudentInfoService {
   }
 
   // get all student on the bus
-  Future<bool> getAllStudentOnBus(int driverId) async {
-    final Map<String, String> data = {'driverId': driverId.toString()};
+  Future<bool> getAllStudentOnBus(int busId) async {
+    final Map<String, String> data = {'busId': busId.toString()};
 
     return await handlePostRequest(
       onGetError: getError,
@@ -54,6 +54,21 @@ class StudentInfoService {
       onGetError: getError,
       onGetResponse: getResponseBody,
       prefix: 'student/bus',
+      data: data,
+    );
+  }
+
+  // update the student bus
+  Future<bool> updateStudentABus(int studentId, int busId) async {
+    Map<String, String> data = {
+      'studentId' : studentId.toString(),
+      'busId' : busId.toString(),
+    };
+
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponseBody,
+      prefix: 'student/update/bus',
       data: data,
     );
   }

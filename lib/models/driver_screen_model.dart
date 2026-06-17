@@ -74,6 +74,7 @@ class DriverScreenModel {
         driverId : id!,
       ),
       DriverStudentsScreen(
+        busId: busId,
         driverId: id!,
         triggerDriverSnackBar: triggerDriverSnackBar,
       ),

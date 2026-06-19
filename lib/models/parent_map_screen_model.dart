@@ -86,7 +86,7 @@ class ParentMapScreenModel {
 
   void getStudentAttendanceStatus(Timer timer) async{
     
-    if(await attendanceService.getAttendanceStatus()){
+    if(await attendanceService.getAttendanceStatus(studentId!)){
       // 
       Map<String, dynamic> studentAttendance = attendanceService.getResponseParse();
       attendanceStatus = studentAttendance['attendance_status'] as String;
@@ -121,7 +121,7 @@ class ParentMapScreenModel {
       // after student infomation fetch successfully, let open the timer-polling
       // purpose: to continue requesting bus-locations information and student-attendance status
       locationService = LocationService();
-      attendanceService = AttendanceService(studentId: studentId!);
+      attendanceService = AttendanceService();
       // store timer-polling object, to destroy it later, when parent-map-screen dispose
       getLocationTimer = Timer.periodic(Duration(seconds: 2), getStreamLocation);
       getAttendanceStatusTimer = Timer.periodic(Duration(seconds: 2), getStudentAttendanceStatus);

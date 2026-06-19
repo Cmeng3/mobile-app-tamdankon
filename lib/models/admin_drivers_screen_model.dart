@@ -147,7 +147,12 @@ class AdminDriversScreenModel {
     } else if(field == 'password'){
       password = input;
     } else if(field == 'bus'){
-      busId = input;
+      if(input != null){
+        busId = input;
+      } else {
+        busId = '0';
+      }
+      
     }
   }
 

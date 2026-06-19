@@ -21,7 +21,7 @@ class CreateDriverDialog extends StatefulWidget {
 class _CreateDriverDialogState extends State<CreateDriverDialog> {
   final _formKey = GlobalKey<FormState>();
 
-  String selectedBus = '0';
+  String? selectedBus;
   // store all available bus
   List<dynamic> buses = [];
   //
@@ -30,6 +30,11 @@ class _CreateDriverDialogState extends State<CreateDriverDialog> {
   void getAllBuses() async{
     buses = await widget.onGetBuses();
     buses = List<dynamic>.from(buses.where((bus) => bus['driver_id'] == 0));
+    if(buses.isNotEmpty){
+       selectedBus = buses[0]['id'].toString();
+    }
+   
+    print(buses);
     isLoading = false;
     setState(() {});
   }
@@ -167,15 +172,12 @@ class _CreateDriverDialogState extends State<CreateDriverDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  items:List<DropdownMenuItem<String>>.from(
-                    buses.map((bus) {
-                      return DropdownMenuItem(
+                  items: [
+                    ...buses.map((bus) => DropdownMenuItem(
                         value: bus['id'].toString(),
                         child: Text('Bus ${bus['id']}'),
-                      );
-                    })
-                  ),
-
+                      ))
+                  ],
                   onSaved: (String? input) {
                     widget.onSavedField(input, 'bus');
                   },

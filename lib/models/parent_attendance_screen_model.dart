@@ -14,8 +14,8 @@ class ParentAttendanceScreenModel {
   final int parentId;
   // trigger parent-attendance-screen state
   // use to fetch the attendance relate service: request-status and attendance-status
-  late AttendanceService attendanceService;
-  //
+  AttendanceService attendanceService = AttendanceService();
+  late int studentId;
   final void Function() onUpdateParentState;
   // store all student-attendance records
   List<Map<String, dynamic>> attendancesList = [];
@@ -56,7 +56,7 @@ class ParentAttendanceScreenModel {
       formKey.currentState!.save();
       isLoading = true;
       onUpdateParentState();
-      if(await attendanceService.storeAttendanceRequestRecord(attendanceReason)){
+      if(await attendanceService.storeAttendanceRequestRecord(attendanceReason, studentId)){
         attendanceRequestStatus = 'pending';
       } else {
         error = attendanceService.error!;
@@ -76,16 +76,16 @@ class ParentAttendanceScreenModel {
     if(await studentInfoService.getStudentId(parentId)){
       // extract the student id from response body and store it in studentId
       Map<String, dynamic> res = studentInfoService.getResponseParse();
-      int studentId = res['student_id'];
+      studentId = res['student_id'];
       // after getting studentId, now we instantiat the attendance-service
       // purpose: to get all attendances record of that specific student
-      attendanceService = AttendanceService(studentId: studentId);
-      if(await attendanceService.getAttendances()){
+      
+      if(await attendanceService.getAttendances(studentId)){
         Map<String, dynamic> res = attendanceService.getResponseParse();
         // extract specific  student-all-attendance-record to the attendancesList
         attendancesList = List<Map<String, dynamic>>.from(res['data']);
         // checking for the student-today-attendance
-        if(await attendanceService.getAttendanceStatus()){
+        if(await attendanceService.getAttendanceStatus(studentId)){
             // get the today-attendance
             todayAttendance = attendanceService.getResponseParse()['attendance_status'];
         } else{
@@ -130,7 +130,7 @@ class ParentAttendanceScreenModel {
       requestStatusTimer!.cancel();
     }
     // fetching the status
-    else if(await attendanceService.getAttendanceRequestStatus()){
+    else if(await attendanceService.getAttendanceRequestStatus(studentId)){
       // when api-call success, let store the attendance-request-status
       attendanceRequestStatus = attendanceService.getResponseParse()['status'] as String;
     } else {
@@ -144,7 +144,7 @@ class ParentAttendanceScreenModel {
     // if present, we don't need any data-polling request
     if(todayAttendance == 'present') {
       // last fetch of the student-all-attendance record from today;
-      if(await attendanceService.getAttendances()){
+      if(await attendanceService.getAttendances(studentId)){
         Map<String, dynamic> res = attendanceService.getResponseParse();
         // extract specific  student-all-attendance-record to the attendancesList
         attendancesList = List<Map<String, dynamic>>.from(res['data']);
@@ -157,7 +157,7 @@ class ParentAttendanceScreenModel {
       onUpdateParentState();
     }
     // we won't trigger update-state here, because we already calling this service one before in $this.getStudentAttendance()
-    else if(await attendanceService.getAttendanceStatus()){
+    else if(await attendanceService.getAttendanceStatus(studentId)){
       // get the today-attendance
       todayAttendance = attendanceService.getResponseParse()['attendance_status'];
     } else{

@@ -51,6 +51,7 @@ class _AdminManageRouteScreenState extends State<AdminManageRouteScreen> {
           children: [
             /// Search Bar
             TextFormField(
+              onChanged: adminManageRouteScreenModel.searchFilter,
               controller: searchController,
               decoration: InputDecoration(
                 hintText: "Search Bus...",
@@ -89,9 +90,9 @@ class _AdminManageRouteScreenState extends State<AdminManageRouteScreen> {
             /// Bus List
             Expanded(
               child: ListView.builder(
-                itemCount: adminManageRouteScreenModel.busList.length,
+                itemCount: adminManageRouteScreenModel.currentBusList.length,
                 itemBuilder: (context, index) {
-                  final bus = adminManageRouteScreenModel.busList[index];
+                  final bus = adminManageRouteScreenModel.currentBusList[index];
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 15),

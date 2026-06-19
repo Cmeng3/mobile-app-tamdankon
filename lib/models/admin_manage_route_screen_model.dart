@@ -11,6 +11,7 @@ class AdminManageRouteScreenModel {
     });
     // property that use for display in the screen
     List<Map<String, dynamic>> busList = [];
+    List<Map<String, dynamic>> currentBusList = [];
 
     // property that use for query
     BusService busService = BusService();
@@ -43,6 +44,7 @@ class AdminManageRouteScreenModel {
             'status' : bus['is_active'] == 0 ? 'Inactive' : 'Active',
           })
         );
+        currentBusList = busList;
       } else {
         onTriggerSnackBar(busService.error!, Colors.red);
       }
@@ -73,6 +75,16 @@ class AdminManageRouteScreenModel {
         onTriggerSnackBar(studentInfoService.error!, Colors.red);
         return [];
       }
+    }
+    //
+    void searchFilter(String? input) {
+      if(input == '') {
+        currentBusList = busList;
+      } else {
+        currentBusList = List<Map<String, dynamic>>.from(busList.where((bus) => bus['driver'].contains(input)));
+      }
+      isLoading = false;
+      onScreenStateChange();
     }
     // create bus
     void createBus(String? busName) async {

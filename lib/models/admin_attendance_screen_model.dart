@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/services/attendance_service.dart';
 
@@ -14,12 +16,14 @@ class AdminAttendanceScreenModel {
   AttendanceService attendanceService = AttendanceService();
 
   // property that control the screen state
+  late Timer getAttendanceTimer;
   bool isLoading = true;
   final void Function() onScreenStateChange;
   final void Function(String message, Color color) onTriggerSnackBar;
 
   void loadingScreenInfo() async {
     await getAllAttendanceRequest();
+    getAttendanceTimer = Timer.periodic(Duration(seconds: 7), getStreamOfAttendanceRequest);
     isLoading = false;
     onScreenStateChange();
   }
@@ -35,6 +39,12 @@ class AdminAttendanceScreenModel {
     } else {
       onTriggerSnackBar(attendanceService.error!, Colors.red);
     }
+  }
+  //
+  void getStreamOfAttendanceRequest(Timer? timer) async {
+    await getAllAttendanceRequest();
+    isLoading = false;
+    onScreenStateChange();
   }
 
   //

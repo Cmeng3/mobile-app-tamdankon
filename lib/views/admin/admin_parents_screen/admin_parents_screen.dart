@@ -38,6 +38,12 @@ class _AdminParentsScreenState extends State<AdminParentsScreen> {
   }
 
   @override
+  void dispose() {
+    adminParentsScreenModel.getParentsTimer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return adminParentsScreenModel.isLoading? const Center(child: CircularProgressIndicator(),) : SafeArea(
         child: Padding(

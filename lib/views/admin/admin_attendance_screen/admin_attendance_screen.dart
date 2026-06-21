@@ -33,6 +33,12 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
   }
 
   @override
+  void dispose() {
+    adminAttendanceScreenModel.getAttendanceTimer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return adminAttendanceScreenModel.isLoading
         ? const Center(child: CircularProgressIndicator())

@@ -22,33 +22,6 @@ class AdminChatScreen extends StatefulWidget {
 class _AdminChatScreenState extends State<AdminChatScreen> {
   final TextEditingController _searchController =
       TextEditingController();
-
-  final List<Map<String, dynamic>> groups = [
-    {
-      'name': 'Bus #01 Parents',
-      'message': 'New attendance request received',
-      'time': '09:45',
-      'unread': 3,
-    },
-    {
-      'name': 'Bus #02 Drivers',
-      'message': 'Student arrived safely',
-      'time': '08:30',
-      'unread': 1,
-    },
-    {
-      'name': 'Teachers Group',
-      'message': 'Meeting scheduled at 2 PM',
-      'time': 'Yesterday',
-      'unread': 0,
-    },
-    {
-      'name': 'School Management',
-      'message': 'Monthly report uploaded',
-      'time': 'Yesterday',
-      'unread': 5,
-    },
-  ];
   //
   void getScreenStateChange() {
     setState(() {});
@@ -67,6 +40,12 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
   }
 
   @override
+  void dispose() {
+    adminChatScreenModel.getGroupChatTimer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return adminChatScreenModel.isLoading? const Center(child: CircularProgressIndicator()) : SafeArea(
         child: Padding(
@@ -76,7 +55,8 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
               const SizedBox(height: 8),
 
               /// Search Bar
-              TextField(
+              TextFormField(
+                onChanged: adminChatScreenModel.searchFilter,
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search chat groups',
@@ -95,11 +75,11 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
               /// Group List
               Expanded(
                 child: ListView.separated(
-                  itemCount: adminChatScreenModel.groupList.length,
+                  itemCount: adminChatScreenModel.currentGroupList.length,
                   separatorBuilder: (_, __) =>
                       const SizedBox(height: 10),
                   itemBuilder: (context, index) {
-                    final group = adminChatScreenModel.groupList[index];
+                    final group = adminChatScreenModel.currentGroupList[index];
 
                     return InkWell(
                       borderRadius: BorderRadius.circular(16),

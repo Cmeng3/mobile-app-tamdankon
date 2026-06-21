@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
@@ -22,6 +24,7 @@ class AdminDriversScreenModel {
   BusService busService = BusService();
 
   // property that control the screen state
+  late Timer getDriverTimer;
   bool isLoading = true;
   final void Function() onScreenStateChange;
   final void Function(String message, Color color) onTriggerSnackBar;
@@ -29,6 +32,7 @@ class AdminDriversScreenModel {
   // loading screen information
   void loadScreenInfo() async{
     await getAllDriver();
+    getDriverTimer = Timer.periodic(Duration(seconds: 7), getStreamOfDriver);
     isLoading = false;
     onScreenStateChange();
   }
@@ -50,6 +54,12 @@ class AdminDriversScreenModel {
     } else {
       onTriggerSnackBar(userService.error!, Colors.red);
     }
+  }
+  //
+  void getStreamOfDriver(Timer? timer) async{
+    await getAllDriver();
+    isLoading = false;
+    onScreenStateChange();
   }
   //
   void assignDriverABus( int driverId, int busId) async {

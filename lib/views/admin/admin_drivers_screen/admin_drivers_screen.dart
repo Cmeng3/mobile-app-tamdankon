@@ -40,6 +40,13 @@ class _AdminDriverScreenState extends State<AdminDriversScreen> {
   }
 
   @override
+  void dispose() {
+    adminDriversScreenModel.getDriverTimer.cancel();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return adminDriversScreenModel.isLoading? const Center(child: CircularProgressIndicator()) : Scaffold(
       body: Padding(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
@@ -27,6 +29,7 @@ class AdminParentsScreenModel {
   BusService busService = BusService();
 
   // property control the screen-state
+  late Timer getParentsTimer;
   bool isLoading = true;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final void Function() onScreenStateChange;
@@ -34,8 +37,14 @@ class AdminParentsScreenModel {
 
 
   void loadScreenInfo() async{
-    isLoading = true;
-    if(await userService.getAllParents()){
+    await getAllParents();
+    getParentsTimer = Timer.periodic(Duration(seconds: 60), getStreamOfParents);
+    isLoading = false;
+    onScreenStateChange();
+  }
+  //
+  Future<void> getAllParents() async {
+     if(await userService.getAllParents()){
       Map<String, dynamic> res = userService.getResponseParse();
       parentsInfoList = List<Map<String, dynamic>>.from(res['parents']);
       currentParentsInfoList = parentsInfoList;
@@ -43,6 +52,10 @@ class AdminParentsScreenModel {
     } else {
       onTriggerSnackBar(userService.error!, Colors.red);
     }
+  }
+  //
+  void getStreamOfParents(Timer? timer) async {
+    await getAllParents();
     isLoading = false;
     onScreenStateChange();
   }
@@ -153,9 +166,4 @@ class AdminParentsScreenModel {
 
     return null;
   }
-
-
-  
-
-
 }

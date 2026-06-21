@@ -43,7 +43,6 @@ class _ParentChatScreenState extends State<ParentChatScreen> {
 
   @override
   void dispose() {
-    
       parentChatScreenModel.getChatMessagesTimer!.cancel();
     super.dispose();
   }

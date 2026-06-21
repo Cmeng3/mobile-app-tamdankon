@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_attendance_screen/admin_attendance_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/admin/admin_chat_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/admin/admin_chat_screen/admin_chat_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_drivers_screen/admin_drivers_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_manage_route_screen/admin_manage_route_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/admin/admin_my_account_screen.dart';
@@ -59,7 +59,10 @@ class AdminScreenModel {
       AdminParentsScreen(onTriggerSnackBar: onTriggerSnackBar,),
       AdminDriversScreen(onTriggerSnackBar: onTriggerSnackBar,),
       AdminSearchScreen(onGetCurrentScreen: onGetCurrentScreen,),
-      AdminChatScreen(),
+      AdminChatScreen(
+        adminId: id!,
+        onTriggerSnackBar: onTriggerSnackBar,
+      ),
       AdminAttendanceScreen(onTriggerSnackBar: onTriggerSnackBar,),
       AdminManageRouteScreen(onTriggerSnackBar: onTriggerSnackBar),
       AdminMyAccountScreen(

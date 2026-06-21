@@ -15,16 +15,10 @@ class AdminAttendanceScreen extends StatefulWidget {
 }
 
 class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
-  final List<Map<String, dynamic>> attendanceRequests = [
-    {"student": "John Smith", "bus": "BUS-01", "time": "07:15 AM"},
-    {"student": "Emma Johnson", "bus": "BUS-02", "time": "07:28 AM"},
-    {"student": "Michael Brown", "bus": "BUS-03", "time": "07:35 AM"},
-  ];
   //
   void getScreenStateChange() {
     setState(() {});
   }
-
   //
   late AdminAttendanceScreenModel adminAttendanceScreenModel =
       AdminAttendanceScreenModel(

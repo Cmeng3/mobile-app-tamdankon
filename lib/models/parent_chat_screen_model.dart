@@ -11,7 +11,7 @@ class ParentChatScreenModel {
   //
   final int parentId;
   String? error;
-  late ChatService chatService = ChatService(userId: parentId);
+  late ChatService chatService = ChatService();
   List<Map<String, dynamic>> messages = [];
 
   // control the state of parent-chat-screen
@@ -27,7 +27,7 @@ class ParentChatScreenModel {
     // waiting for data-fetching ready
     isLoading = true;
     // start fetching the message
-    if(await chatService.getParentAndDriverMessages()) {
+    if(await chatService.getParentAndDriverMessages(parentId)) {
       now = DateTime.now();
       // parsing the response into useable format
       Map<String, dynamic> res = chatService.getResponseParse();
@@ -48,7 +48,7 @@ class ParentChatScreenModel {
   void storeMessage(String? msg, TextEditingController controller) async {
     // if there a message let store it to the database
     if(!(msg == null || msg.trim() == '')){
-      if(await chatService.storeParentAndDriverMessage(msg)){
+      if(await chatService.storeParentAndDriverMessage(parentId, msg)){
         controller.clear();
       } else {
         onTriggerParentSnackbar(chatService.error!, Colors.red);
@@ -58,7 +58,7 @@ class ParentChatScreenModel {
   }
   // get the stream of messages
   void getStreamMessages(Timer timer) async{
-    if(await chatService.getParentAndDriverMessages()) {
+    if(await chatService.getParentAndDriverMessages(parentId)) {
       // store a new present current DateTime
       // force parent-chat-screen to update state
       now = DateTime.now();  

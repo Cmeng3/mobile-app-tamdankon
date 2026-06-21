@@ -11,7 +11,7 @@ class DriverChatScreenModel {
   //
   final int driverId;
   String? error;
-  late ChatService chatService = ChatService(userId: driverId);
+  late ChatService chatService = ChatService();
   List<Map<String, dynamic>> messages = [];
 
   // control the state of parent-chat-screen
@@ -25,7 +25,7 @@ class DriverChatScreenModel {
     // waiting for data-fetching ready
     isLoading = true;
     // start fetching the message
-    if(await chatService.getParentAndDriverMessages()) {
+    if(await chatService.getParentAndDriverMessages(driverId)) {
       now = DateTime.now();
       // parsing the response into useable format
       Map<String, dynamic> res = chatService.getResponseParse();
@@ -46,7 +46,7 @@ class DriverChatScreenModel {
   void storeMessage(String? msg, TextEditingController controller) async {
     // if there a message let store it to the database
     if(!(msg == null || msg.trim() == '')){
-      if(await chatService.storeParentAndDriverMessage(msg)){
+      if(await chatService.storeParentAndDriverMessage(driverId, msg)){
         controller.clear();
       } else {
         onTriggerParentSnackbar(chatService.error!, Colors.red);
@@ -56,7 +56,7 @@ class DriverChatScreenModel {
   }
   // get the stream of messages
   void getStreamMessages(Timer timer) async{
-    if(await chatService.getParentAndDriverMessages()) {
+    if(await chatService.getParentAndDriverMessages(driverId)) {
       // store a new present current DateTime
       // force parent-chat-screen to update state
       now = DateTime.now();  

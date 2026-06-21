@@ -1,16 +1,15 @@
 import 'dart:convert';
-
+import 'package:http/http.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 
 class ChatService {
-  ChatService({required this.userId});
+  ChatService();
 
-  final int userId;
   String? error;
   String? responseBody;
 
   // get the parent and driver message
-  Future<bool> getParentAndDriverMessages() async {
+  Future<bool> getParentAndDriverMessages(int userId) async {
     Map<String, String> data = {'userId': userId.toString()};
     // return the response
     return await handlePostRequest(
@@ -21,8 +20,18 @@ class ChatService {
     );
   }
 
+  // get the admin message
+  Future<bool> getAdminMessages(int userId, int chatId) async {
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: onGetResponse,
+      prefix: 'chat',
+      data: {'userId': userId.toString(), 'chatId': chatId.toString()},
+    );
+  }
+
   // store parent and driver message to the database
-  Future<bool> storeParentAndDriverMessage(String message) async {
+  Future<bool> storeParentAndDriverMessage(int userId, String message) async {
     Map<String, String> data = {
       'userId': userId.toString(),
       'message': message,
@@ -33,6 +42,24 @@ class ChatService {
       onGetResponse: onGetResponse,
       prefix: 'chat/store',
       data: data,
+    );
+  }
+
+  // store admin message
+  Future<bool> storeAdminMessage(
+    int adminId,
+    int chatId,
+    String message,
+  ) async {
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: onGetResponse,
+      prefix: 'chat/store',
+      data: {
+        'userId' : adminId.toString(),
+        'chatId' : chatId.toString(),
+        'message' : message
+      },
     );
   }
 

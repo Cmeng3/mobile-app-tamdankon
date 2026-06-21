@@ -57,7 +57,7 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(context) {
     return adminScreenModel.isLoading ? Scaffold(body: const Center(child: CircularProgressIndicator())) : Scaffold(
-      appBar: StyleAppBar(username: 'Ratana Soth', role: 'admin'),
+      appBar: StyleAppBar(username: '${adminScreenModel.username}', role: 'admin'),
       body: IndexedStack(
         index: currentScreenIndex,
         children: adminScreenModel.adminScreens,

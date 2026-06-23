@@ -17,7 +17,7 @@ class DriverChatScreenModel {
   // control the state of parent-chat-screen
   DateTime? now;
   bool isLoading = false;
-  Timer? getChatMessagesTimer;
+  late Timer getChatMessagesTimer;
   final void Function() onUpdateDriverState;
   final void Function(String message, Color color) onTriggerParentSnackbar;
   // fecting the api-end point to get messages

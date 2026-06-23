@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/components/style_app_bar.dart';
 import 'package:tamdan_kon_mobile_flutter/models/driver_screen_model.dart';
+import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/bus_unavailable_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/driver_bottom_nav_bar.dart';
-import 'package:tamdan_kon_mobile_flutter/views/driver/driver_screen_components/location_unavailable_screen.dart';
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key, required this.onRootScreenChange});
@@ -59,27 +59,38 @@ class _DriverScreenState extends State<DriverScreen> {
   }
 
   @override
+  void dispose() {
+    driverScreenModel.getBusAssociationTimer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(context) {
     return driverScreenModel.isLoading
         ? Scaffold(body: const Center(child: CircularProgressIndicator()))
-        : Scaffold(
-          appBar: StyleAppBar(
-            username: driverScreenModel.username!,
-            role: driverScreenModel.role!,
+        : [
+            Scaffold(
+            appBar: StyleAppBar(
+              username: driverScreenModel.username!,
+              role: driverScreenModel.role!,
+            ),
+            body: IndexedStack(
+                      // all List<driver_screens>
+                      index: currentScreen,
+                      children: driverScreenModel.driverScreens,
+                    ),
+            bottomNavigationBar: DriverBottomNavbar(
+            
+              onDriverScreenChange: onDriverScreenChange,
+              currentScreen: currentScreen,
+            ),
           ),
-          body:[
-              IndexedStack(
-                    // all List<driver_screens>
-                    index: currentScreen,
-                    children: driverScreenModel.driverScreens,
-                  ),
-              LocationUnavailableScreen(),
-          ][driverScreenModel.temScreenIndex],
-          bottomNavigationBar: DriverBottomNavbar(
-          
-            onDriverScreenChange: onDriverScreenChange,
-            currentScreen: currentScreen,
+          BusUnavailableScreen(
+            driverId: driverScreenModel.id!,
+            onRootScreenChange: widget.onRootScreenChange,
+            onTriggerParentSnackbar: getSnackBar,
+            onUpdateDriverState: onDriverScreenStateChange,
           ),
-        );
+        ][driverScreenModel.temScreenIndex];
   }
 }

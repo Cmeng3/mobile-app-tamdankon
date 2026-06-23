@@ -22,6 +22,9 @@ class ParentMapScreenModel {
   final void Function(LatLng newLocation) onUpdateBusLocation;
   // store parent-map-screen on get snack-bar to trigger it later to show the error message
   final void Function(String message, Color color) onTriggerSnackBar;
+  //
+  late BitmapDescriptor busMarkerIcon;
+  late BitmapDescriptor schoolMarkerIcon;
   // map controller
   late GoogleMapController mapController;
   // is loading
@@ -118,6 +121,15 @@ class ParentMapScreenModel {
       busId = studnetData['bus_id'] as int;
       driverName = studentInfo['driver_name'] as String;
       attendanceStatus = studentInfo['attendance_status'] as String;
+      // get bus marker Icon
+      busMarkerIcon = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(30, 30)),
+      'assets/images/bus.png',
+      );
+      schoolMarkerIcon = schoolMarkerIcon = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(50, 50)),
+      'assets/images/school_marker.png',
+    );
       // after student infomation fetch successfully, let open the timer-polling
       // purpose: to continue requesting bus-locations information and student-attendance status
       locationService = LocationService();

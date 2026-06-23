@@ -43,8 +43,7 @@ class _DriverChatScreenState extends State<DriverChatScreen> {
 
   @override
   void dispose() {
-    driverChatScreenModel.getChatMessagesTimer!.cancel();
-    
+    driverChatScreenModel.getChatMessagesTimer.cancel();
     super.dispose();
   }
   @override

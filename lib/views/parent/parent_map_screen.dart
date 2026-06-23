@@ -25,8 +25,12 @@ class ParentMapScreen extends StatefulWidget {
 
 class _ParentMapScreenState extends State<ParentMapScreen> {
   // storing the current bus location
-  Set<Marker> currentBusMarkerLocation = {
-    Marker(markerId: MarkerId('home'), position: LatLng(11.587098, 104.844813)),
+  late Set<Marker> currentBusMarkerLocation = {
+    Marker(
+      markerId: MarkerId('home'), 
+      position: LatLng(11.5823794,104.8980497), 
+      icon: parentMapScreenModel.busMarkerIcon
+    ),
   };
   // method that trigger the bus new position update
   void getNewBusLocation(LatLng newLocation) {
@@ -34,7 +38,14 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
 
     setState(() {
       currentBusMarkerLocation.add(
-        Marker(markerId: MarkerId('home'), position: newLocation),
+        Marker(
+          markerId: MarkerId('home'), 
+          infoWindow: InfoWindow(
+            title: 'School Bus'
+          ),
+          position: newLocation, 
+          icon: parentMapScreenModel.busMarkerIcon
+        ),
       );
     });
   } 
@@ -97,20 +108,24 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 // displaying the goolge map view
                 child: GoogleMap(
-                  onTap: (LatLng c) { 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Scaffold(appBar: AppBar(title: Text('hello'))))
-                    );
-                   },
                   onMapCreated: (GoogleMapController mapController) {
                     parentMapScreenModel.mapController = mapController;
                   },
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(11.587098, 104.844813),
-                    zoom: 18,
+                    target: LatLng(11.5823794,104.8980497),
+                    zoom: 16,
                   ),
-                  markers: currentBusMarkerLocation,
+                  markers: {
+                    Marker(
+                      markerId: MarkerId('school'),
+                      infoWindow: InfoWindow(
+                        title: 'Paragon Internation School',
+                      ),
+                      position: LatLng(11.5823794,104.8980497),
+                      icon: parentMapScreenModel.schoolMarkerIcon
+                    ),
+                    ...currentBusMarkerLocation
+                  },
                 ),
               ),
 

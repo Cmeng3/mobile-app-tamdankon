@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/checking_location_permission.dart';
@@ -28,6 +30,8 @@ class DriverScreenModel {
   // property that control the state of driver-screen
   // problem screen index, use for temporary navigate to temporary error screen
   int temScreenIndex = 0;
+  BusService busService = BusService();
+  late Timer getBusAssociationTimer;
   // method that trigger the driver-screen snackbar
   final void Function(String message, Color color) triggerDriverSnackBar;
   // trigger to updated the driver-screen state
@@ -48,13 +52,11 @@ class DriverScreenModel {
     phoneNumber = pref.getString('phone_number');
     // instantiat the BusService to get the bus id
     // purpose: to get the bus id associate with this driver
-    BusService busService = BusService();
-    if(await busService.getBusId(id!)){
-      Map<String, dynamic> res = busService.getResponseParse();
-      busId = res['bus_id'];
-    } else {
-      triggerDriverSnackBar(busService.error!, Colors.red);
+    await getBusId();
+    if(busId == 0) {
+      temScreenIndex = 1;
     }
+    getBusAssociationTimer = Timer.periodic(Duration(seconds: 7), getStreamOfBusId);
     // checking the user location-service and location-permission
     // promt them to turn location-permission on if it not enable
     // later in future, we will handle the app to another temporary screen, if user location-service and location-permission isn't enable
@@ -65,6 +67,31 @@ class DriverScreenModel {
     isLoading = !isLoading;
     onUpdateDriverState();
   }
+  // start get stream of bus
+  void startGetStreamOfBusTimer(int driverId) async{
+    getBusAssociationTimer = Timer.periodic(Duration(seconds: 7), getStreamOfBusId);
+  }
+
+  // get bus id
+  Future<void> getBusId() async {
+    if(await busService.getBusId(id!)){
+      Map<String, dynamic> res = busService.getResponseParse();
+      busId = res['bus_id'];
+    } else {
+      triggerDriverSnackBar(busService.error!, Colors.red);
+    }
+  }
+  // watch the driver-bus-association
+  void getStreamOfBusId(Timer? timer) async{
+    await getBusId();
+    if(busId == 0) {
+      temScreenIndex = 1;
+    } else {
+      temScreenIndex = 0;
+    }
+     onUpdateDriverState();
+  }
+
   // get the parent screen with initial value
   void getDriverScreens() {
      driverScreens = [

@@ -5,6 +5,7 @@ import 'package:tamdan_kon_mobile_flutter/composable/handle_http_request.dart';
 class RouteService {
   String? error;
   String? responseBody;
+  Map<String, String>? routeResponse;
 
   // get the bus polyline in encoded string formate
   Future<bool> getBusPolyline(int busId) async {
@@ -29,7 +30,7 @@ class RouteService {
     // get the polyline from google map
     if (await handleGoogleMapGetRouteHttpRequest(
       onGetError: getError,
-      onGetResponse: getResponseBody,
+      onGetResponse: getRouteResponse,
       studentLocation: studentLocation,
       busLocation: busLocation,
     )) {
@@ -37,8 +38,10 @@ class RouteService {
       Map<String, String> data = {
         'busId': busId.toString(),
         'direction': direction,
-        'polyline': responseBody!,
+        'polyline': routeResponse!['polyline']!,
+        'eta' : routeResponse!['eta']!,
       };
+      print('eta: ${routeResponse!['eta']!}');
       // update the polyline to the database
       return await handlePostRequest(
         onGetError: getError,
@@ -59,6 +62,9 @@ class RouteService {
   }
   void getResponseBody(String? response) {
     responseBody = response;
+  }
+  void getRouteResponse(Map<String, String>? data) {
+    routeResponse = data;
   }
   // get response-body parse into dart object
   Map<String, dynamic> getResponseParse() {

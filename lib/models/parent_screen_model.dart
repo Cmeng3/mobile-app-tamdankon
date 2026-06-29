@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_attendance_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_chat_screen.dart';
-import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen/parent_map_screen.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/my_account_screen/parent_my_account_screen.dart';
 
 class ParentScreenModel {

@@ -55,10 +55,11 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
     setState(() {});
   }
   // return the snackBar 
-  void getSnackBar(String error) {
+  void getSnackBar(String alert, Color color, Duration? duration) {
     final snackBar = SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Center(child: AppText(error)),
+            backgroundColor: color,
+            duration: duration ?? Duration(seconds: 4),
+            content: Center(child: AppText(alert)),
           );
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.
@@ -71,6 +72,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
     onUpdateParentState: updateParentState,
     onUpdateBusLocation: getNewBusLocation,
     onTriggerSnackBar: widget.onTriggerParentAppSnackbar,
+    context: context,
   );
 
   @override
@@ -83,6 +85,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
   void dispose() {
     super.dispose();
     parentMapScreenModel.getLocationTimer?.cancel();
+    parentMapScreenModel.getBusDirectionStatusTimer!.cancel();
     if(parentMapScreenModel.getAttendanceStatusTimer != null){
       parentMapScreenModel.getAttendanceStatusTimer?.cancel();
     }
@@ -115,6 +118,7 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                     target: LatLng(11.5823794,104.8980497),
                     zoom: 16,
                   ),
+                  polylines: parentMapScreenModel.polyline,
                   markers: {
                     Marker(
                       markerId: MarkerId('school'),
@@ -156,14 +160,15 @@ class _ParentMapScreenState extends State<ParentMapScreen> {
                       title: 'Student',
                       value: parentMapScreenModel.studentName ?? 'Not available',
                     ),
-                    InfoTile(
-                      icon: Icons.badge,
-                      title: 'Student ID',
-                      value: parentMapScreenModel.studentId.toString(),
-                    ),
                     InfoTile(icon: Icons.wc, title: 'Sex', value: parentMapScreenModel.sex ?? 'Not available'),
                     // Attendance check-tile
                     AttandanceTile(label: 'Attendance', status: parentMapScreenModel.attendanceStatus ?? 'Not available'),
+                    BooleanInfoTile(
+                      status: parentMapScreenModel.isBusActive,
+                      icon: Icons.speed,
+                      title: 'Speed',
+                      value:'${parentMapScreenModel.busSpeed.toStringAsFixed(1)} km/h ',
+                    ),
                     BooleanInfoTile(
                       status: parentMapScreenModel.isBusActive,
                       icon: Icons.bus_alert,

@@ -1,10 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
+import 'package:tamdan_kon_mobile_flutter/composable/googlemap_polyline_decoder.dart';
 import 'package:tamdan_kon_mobile_flutter/services/attendance_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/location_service.dart';
+import 'package:tamdan_kon_mobile_flutter/services/route_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/student_info_service.dart';
+import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen/bus_info_alert_dialog.dart';
 
 class ParentMapScreenModel {
   ParentMapScreenModel({
@@ -13,6 +18,7 @@ class ParentMapScreenModel {
     required this.onUpdateBusLocation,
     required this.onTriggerSnackBar,
     this.isBusActive = false,
+    this.context,
   });
   // store the parent id, to query specific data
   final int parentId;
@@ -22,6 +28,11 @@ class ParentMapScreenModel {
   final void Function(LatLng newLocation) onUpdateBusLocation;
   // store parent-map-screen on get snack-bar to trigger it later to show the error message
   final void Function(String message, Color color) onTriggerSnackBar;
+  //
+  BuildContext? context;
+  // current bus direct
+  String? busDirection;
+
   //
   late BitmapDescriptor busMarkerIcon;
   late BitmapDescriptor schoolMarkerIcon;
@@ -37,16 +48,24 @@ class ParentMapScreenModel {
   String? studentName;
   String? sex;
   String? attendanceStatus;
+  double busSpeed = 0;
   int? busId;
   String? driverName;
   String? error;
+  Set<Polyline> polyline = {};
   bool isBusActive;
+
+  // previous bus geocoding-location
+  double preLatitude = 0;
+  double preLongitude = 0;
 
   // Timer instant that later will use to cancel the stream of getting location
   Timer? getLocationTimer;
   Timer? getAttendanceStatusTimer;
+  Timer? getBusDirectionStatusTimer;
   // we will insert the bus-number later during this implementation
   BusService busService = BusService();
+  RouteService routeService = RouteService();
   late LocationService locationService;
   late AttendanceService attendanceService;
   // get Stream location function
@@ -65,11 +84,26 @@ class ParentMapScreenModel {
         isBusActive = true;
         // get and extract the latitude and longitude value from the api-call
         Map<String, dynamic> locationData = locationService.getResponseParse();
+
+        // checking if previous location is not set yet
+        if(preLatitude == 0 && preLongitude == 0) {
+          preLatitude = double.parse(locationData['lat']);
+          preLongitude == double.parse(locationData['lng']);
+        }
+        // get the current location
         double latitude = double.parse(locationData['lat']);
         double longitude = double.parse(locationData['lng']);
+        // caculate the distance between that two geocoding
+        double distanceInMeter = Geolocator.distanceBetween(preLatitude, preLongitude, latitude, longitude);
+        busSpeed = calculateSpeed(distanceInMeter);
+
+        // assign this current location value as previous location
+        preLatitude = latitude;
+        preLongitude = longitude;
+
         // create newLocation LatLng instance and new CameraPosition
         LatLng newLocation = LatLng(latitude, longitude);
-        CameraPosition cameraPostion = CameraPosition(target: newLocation, zoom: 18);
+        CameraPosition cameraPostion = CameraPosition(target: newLocation, zoom: 16);
         // trigger the parent-map-screen to make a map update a new pin and camera position
         onUpdateBusLocation(newLocation);
         mapController.animateCamera(
@@ -77,6 +111,7 @@ class ParentMapScreenModel {
           duration: Duration(seconds: 1),
         );
       } else {
+        busSpeed = 0.0;
         // is the bus-active-status is 0, it mean it is not the suitable time to get the location
         isBusActive = false;
         onUpdateParentState();
@@ -84,6 +119,86 @@ class ParentMapScreenModel {
     } else {
       // trigger the snackbar in parent-map-screen to show the get_bus_status error
       onTriggerSnackBar(locationService.error!, Colors.red);
+    }
+  }
+
+  // calculate speed in km/h
+  double calculateSpeed(double distanceInMeter) {
+    double valocityInMeterOverSeconde = distanceInMeter / (3.5);
+    return (valocityInMeterOverSeconde * 36) / 10;
+  }
+
+  // track the bus direction status
+  void getStreamOfBusDirectionStatus(Timer? timer) async{
+    if(await routeService.getBusPolyline(busId!)) {
+      Map<String, dynamic> res = routeService.getResponseParse();
+      List<String> directions = [
+        studentId.toString(),
+        'school',
+        'arrived',
+        'emergency',
+      ];
+      print(res);
+      if(res['direction'] == studentId.toString() && busDirection != res['direction']) {
+        showDialog(context: context!, builder: (context){
+            return BusInfoAlertDialog(
+              title: 'We going to pick-up your child',
+              titleColor: Colors.green,
+              content: 'we will arrive around 12 min',
+              contentImage: Image(image: AssetImage('assets/images/home.png'), width: 120),
+            );
+        });
+         polyline = {
+            Polyline(
+              polylineId: PolylineId('current-route'),
+              color: Colors.green,
+              width: 7,
+              points: googlemapPolylineDecoder(res['polyline']),
+            ),
+          };
+      } else if(res['direction'] == 'school' && busDirection != res['direction']) {
+        showDialog(context: context!, builder: (context){
+            return BusInfoAlertDialog(
+              title: 'We are directing to the school',
+              titleColor: Colors.green,
+              content: 'we will arrive around 12 min',
+              contentImage: Image(image: AssetImage('assets/images/school_marker.png'), width: 120),
+            );
+        });
+        polyline = {
+            Polyline(
+              polylineId: PolylineId('current-route'),
+              color: Colors.green,
+              width: 7,
+              points: googlemapPolylineDecoder(res['polyline']),
+            ),
+        };
+      } else if(res['direction'] == 'arrived' && busDirection != res['direction']) {
+        showDialog(context: context!, builder: (context){
+            return BusInfoAlertDialog(
+              title: 'Arrived School!',
+              titleColor: Colors.green,
+              content: 'we arrived school safe',
+              contentImage: Icon(Icons.check, color: Colors.green, size: 60),
+            );
+        });
+        polyline = {};
+      } else if(res['direction'] == 'emergency' && busDirection != res['direction']) {
+        showDialog(context: context!, builder: (context){
+            return BusInfoAlertDialog(
+              title: 'Bus meet some issue',
+              titleColor: Colors.orange,
+              content: 'we are currently fixing it',
+              contentImage: Image(image: AssetImage('assets/images/fixed.png'), width: 120),
+            );
+        });
+      } else if(!directions.contains(res['direction'])) {
+        polyline = {};
+      }
+
+      busDirection = res['direction'];
+    } else {
+      onTriggerSnackBar(routeService.error!, Colors.red);
     }
   }
 
@@ -137,6 +252,7 @@ class ParentMapScreenModel {
       // store timer-polling object, to destroy it later, when parent-map-screen dispose
       getLocationTimer = Timer.periodic(Duration(seconds: 2), getStreamLocation);
       getAttendanceStatusTimer = Timer.periodic(Duration(seconds: 2), getStudentAttendanceStatus);
+      getBusDirectionStatusTimer = Timer.periodic(Duration(seconds: 7), getStreamOfBusDirectionStatus);
     } else{
       error = studentInfoService.error;
       // trigger the snack-bar to get error message

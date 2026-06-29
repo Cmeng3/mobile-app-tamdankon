@@ -51,7 +51,7 @@ Future<bool> handlePostRequest({
 
 Future<bool> handleGoogleMapGetRouteHttpRequest({
   required void Function(String res) onGetError,
-  required void Function(String? res) onGetResponse,
+  required void Function(Map<String, String>? res) onGetResponse,
   required List<double> studentLocation,
   required Position busLocation,
 }) async {
@@ -66,8 +66,14 @@ Future<bool> handleGoogleMapGetRouteHttpRequest({
       // parse the responce
       final Map<String, dynamic> data = json.decode(response.body);
       if (data['routes'].isNotEmpty) {
+        Map<String, String> routeResponseData = Map<String, String>.from({
+          'polyline' : data['routes'][0]['overview_polyline']['points'],
+          'eta' : data['routes'][0]['legs'][0]['duration']['text'],
+        });
         // Extract polyline
-        onGetResponse(data['routes'][0]['overview_polyline']['points']);
+        onGetResponse(
+          routeResponseData
+        );
         return true;
       } else{
         onGetError('there no data');

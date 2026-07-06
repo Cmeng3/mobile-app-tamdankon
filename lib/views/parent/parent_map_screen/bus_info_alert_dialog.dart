@@ -28,12 +28,16 @@ class BusInfoAlertDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          }, 
-          child: AppText('got it!')
+        SizedBox(
+          width: double.infinity,
+          child:ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: AppText('got it!')
+          ),
         )
+        
       ],
     );
   }

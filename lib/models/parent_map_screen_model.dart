@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:tamdan_kon_mobile_flutter/components/app_text.dart';
 import 'package:tamdan_kon_mobile_flutter/composable/googlemap_polyline_decoder.dart';
 import 'package:tamdan_kon_mobile_flutter/services/attendance_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/bus_service.dart';
@@ -10,6 +9,8 @@ import 'package:tamdan_kon_mobile_flutter/services/location_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/route_service.dart';
 import 'package:tamdan_kon_mobile_flutter/services/student_info_service.dart';
 import 'package:tamdan_kon_mobile_flutter/views/parent/parent_map_screen/bus_info_alert_dialog.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class ParentMapScreenModel {
   ParentMapScreenModel({
@@ -103,7 +104,7 @@ class ParentMapScreenModel {
 
         // create newLocation LatLng instance and new CameraPosition
         LatLng newLocation = LatLng(latitude, longitude);
-        CameraPosition cameraPostion = CameraPosition(target: newLocation, zoom: 16);
+        CameraPosition cameraPostion = CameraPosition(target: newLocation, zoom: 18);
         // trigger the parent-map-screen to make a map update a new pin and camera position
         onUpdateBusLocation(newLocation);
         mapController.animateCamera(
@@ -144,7 +145,7 @@ class ParentMapScreenModel {
             return BusInfoAlertDialog(
               title: 'We going to pick-up your child',
               titleColor: Colors.green,
-              content: 'we will arrive around 12 min',
+              content: 'we will arrive around ${res['eta']}',
               contentImage: Image(image: AssetImage('assets/images/home.png'), width: 120),
             );
         });
@@ -161,7 +162,7 @@ class ParentMapScreenModel {
             return BusInfoAlertDialog(
               title: 'We are directing to the school',
               titleColor: Colors.green,
-              content: 'we will arrive around 12 min',
+              content: 'we will arrive around ${res['eta']}',
               contentImage: Image(image: AssetImage('assets/images/school_marker.png'), width: 120),
             );
         });
@@ -265,5 +266,13 @@ class ParentMapScreenModel {
     isLoading = false;
     onUpdateParentState();
  
+  }
+  // this function will vibrate the phone, when execute
+  // but cuurently it doesn't working yet
+  Future<void> vibratePhone() async {
+    if(await Vibration.hasVibrator()) {
+      Vibration.vibrate();
+    } else {
+    }
   }
 }

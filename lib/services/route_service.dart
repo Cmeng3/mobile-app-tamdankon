@@ -39,7 +39,7 @@ class RouteService {
         'busId': busId.toString(),
         'direction': direction,
         'polyline': routeResponse!['polyline']!,
-        'eta' : routeResponse!['eta']!,
+        'eta': routeResponse!['eta']!,
       };
       print('eta: ${routeResponse!['eta']!}');
       // update the polyline to the database
@@ -55,17 +55,41 @@ class RouteService {
     }
   }
 
+  // clear out bus direction-polyline-eta
+  Future<bool> updateBusInformation({
+    required int busId,
+    String? direction,
+    String? polyline,
+    String? eta,
+  }
+  ) async {
+    return await handlePostRequest(
+      onGetError: getError,
+      onGetResponse: getResponseBody,
+      prefix: 'bus/polyline/update',
+      data: {
+        'busId': busId.toString(),
+        'direction': direction ?? '',
+        'polyline': polyline ?? '',
+        'eta': eta ?? '',
+      },
+    );
+  }
+
   // elevation method, use for it children to trigger it parent-method
   // purpose: store the error and response from it children-function
   void getError(String e) {
     error = e;
   }
+
   void getResponseBody(String? response) {
     responseBody = response;
   }
+
   void getRouteResponse(Map<String, String>? data) {
     routeResponse = data;
   }
+
   // get response-body parse into dart object
   Map<String, dynamic> getResponseParse() {
     return jsonDecode(responseBody!);

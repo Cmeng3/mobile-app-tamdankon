@@ -55,7 +55,7 @@ class DriverRouteScreenModel {
   bool isLoading = true;
   // use to mark, which sources that the system going to get the location from
   // driver-phone or Iot-device
-  String busLocationResource = 'none';
+  late String busLocationResource;
   // get the driver-route-screen build context, use for showing it dialog
   final BuildContext context;
   // trigger the snackbar to show in whole driver-screen
@@ -161,6 +161,17 @@ class DriverRouteScreenModel {
       icon: busMarkerIcon,
       position: LatLng(busLatestLocation.latitude, busLatestLocation.longitude),
     );
+    // get bus status, and set bus location resource
+    if(await busService.getBusStatus(busId!)) {
+      Map<String, dynamic> res = busService.getResponseParse();
+      if(res['bus_status'] == 1) {
+        busLocationResource = 'driver';
+      } else {
+        busLocationResource = 'none';
+      }
+    } else {
+      triggerSnackBar(busService.error!, Colors.red);
+    }
     // activate the location stream, and it listener
     positionStream = Geolocator.getPositionStream(
       locationSettings: locationSetting,
@@ -231,13 +242,27 @@ class DriverRouteScreenModel {
   // update the bus status
   void updateBusStatus() async {
     if (await busService.updateBusStatus(driverId: driverId)) {
-      triggerSnackBar('bus status update successful', Colors.green);
+      if(await routeService.updateBusInformation(busId: busId!)) {
+        triggerSnackBar('bus status update successful', Colors.green);
+      } else {
+        triggerSnackBar(busService.error!, Colors.red);
+      }
     } else {
       triggerSnackBar(busService.error!, Colors.red);
     }
   }
 
   //
+  void triggerBusInfoAlert(String alert) async{
+    if(await routeService.updateBusInformation(busId: busId!, direction: alert)){
+      triggerSnackBar('We alert to parents', Colors.blue);
+    } else {
+      triggerSnackBar(routeService.error!, Colors.red);
+    }
+  }
+
+
+  // get stream of current polyline
   void getBusPolyline(Timer timer) async {
     if (busLocationResource == 'none') {
       polyline = {};
@@ -255,6 +280,8 @@ class DriverRouteScreenModel {
               points: googlemapPolylineDecoder(encodedPolyline),
             ),
           };
+        } else {
+          polyline = {};
         }
       } else {
         triggerSnackBar(routeService.error!, Colors.red);

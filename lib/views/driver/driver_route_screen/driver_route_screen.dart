@@ -150,16 +150,84 @@ class _DriverRouteScreenState extends State<DriverRouteScreen> {
                       showDialog(context: context, builder: (context) {
                         return AlertDialog(
                           title: AppText('Please Choose which we going to collect location from!', color: Colors.black),
-                          content: AppRadio(getLocationChoice: (choice) {
-                            driverRouteScreenModel.busLocationResource = choice;
-                            driverRouteScreenModel.updateBusStatus();
-                            setState(() {});
-                          }),
+                          content: AppRadio(
+                            getLocationChoice: (choice) {
+                              driverRouteScreenModel.busLocationResource = choice;
+                              driverRouteScreenModel.updateBusStatus();
+                              setState(() {});
+                           }
+                          ),
                         );
                       });
                     },
                   ),
                 ),
+                if(driverRouteScreenModel.busLocationResource != 'none')
+                Tooltip(
+                  message: 'Arrived school',
+                  child: StyleFab(
+                    icon: Icons.check,
+                    backgroundColor: Colors.green,
+                    iconColor: Colors.white,
+                    onTap: () {
+                      showDialog(context: context, builder: (context){
+                        return AlertDialog( 
+                          title: AppText('Do you want to alert parent about arrival?', color: Colors.green, fontSize: 18, fontWeight: true,),
+                          content: Icon(Icons.check, size: 60, color: Colors.green),
+                          actions: [
+                            TextButton(onPressed: () {
+                              Navigator.pop(context);
+                            }, 
+                            child: AppText('close', color: const Color.fromARGB(255, 3, 3, 80))
+                            ),
+                            ElevatedButton(onPressed: () {
+                                driverRouteScreenModel.triggerBusInfoAlert('arrived');
+                                Navigator.pop(context);
+                                setState(() {});
+                              }, 
+                              child: AppText('Alert Them!')
+                            )
+                          ],
+                        );
+                      });
+                      
+                    },
+                  ),
+                ),
+                SizedBox(height: 10,),
+                if(driverRouteScreenModel.busLocationResource != 'none')
+                Tooltip(
+                  message: 'Emergency alert',
+                  child: StyleFab(
+                    icon: Icons.warning,
+                    backgroundColor: Colors.orange,
+                    iconColor: Colors.white,
+                    onTap: () {
+                      showDialog(context: context, builder: (context){
+                        return AlertDialog( 
+                          title: AppText('Do you want to alert Emergency?', color: Colors.orange, fontSize: 18, fontWeight: true,),
+                          content: Icon(Icons.warning, size: 60, color: Colors.red),
+                          actions: [
+                            TextButton(onPressed: () {
+                              Navigator.pop(context);
+                            }, 
+                            child: AppText('close', color: const Color.fromARGB(255, 3, 3, 80))
+                            ),
+                            ElevatedButton(onPressed: () {
+                                driverRouteScreenModel.triggerBusInfoAlert('emergency');
+                                Navigator.pop(context);
+                                setState(() {});
+                              }, 
+                              child: AppText('Alert Them!')
+                            )
+                          ],
+                        );
+                      });
+                      
+                    },
+                  ),
+                ),
+                SizedBox(height: 10,),
                 if(driverRouteScreenModel.busLocationResource != 'none')
                 Tooltip(
                   message: 'Start route navigation',

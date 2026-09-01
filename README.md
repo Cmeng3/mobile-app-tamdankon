@@ -1,16 +1,28 @@
-# tamdan_kon_mobile_flutter
+*Part of the Tamdan-Kon school bus tracking system — see other related repo from [full project overview](https://github.com/Konnarak1234/tamdan-kon)*
 
-A new Flutter project.
+## Repositary description
+This repo is used for store **Tamdan-Kon mobile app** project's folder.
 
-## Getting Started
+## Specific Role in System
+**Tamdan-Kon mobile application** provide parents a capability to :  
+- monitor their children school bus's location
+- monitor their children school bus's speed
+- informating about estimation of arrival
+- monitoring their children boarding-arrival status
+- Asking for their children attendance     
 
-This project is a starting point for a Flutter application.
+**Tamdan-Kon mobile application** provide driver a capability to :  
+- help memorizing all student pick-up point
+- choose the best route to get to each student pick-up point
+- student's attendance awareness, by encoding each student pin-point with colors (red-green-orange)   
+(picture of driver-route-screen below)   
+      
+![](assets/images/driver_route_screen.png)
 
-A few resources to get you started if this is your first Flutter project:
+## Technology used
+**Tamdan-Kon mobile application** is developed using Flutter framework.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Library used
+There are 2 main important libraries used in this project:
+- **google_maps**: to ultilize google map development kit in Flutter project, also connect the app to google map api, for consuming there available map service
+- **geolocator**: to collecting mobile device's position in term of geocoding

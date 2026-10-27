@@ -1,4 +1,4 @@
-*Part of the Tamdan-Kon school bus tracking system — see other related repo from [full project overview](https://github.com/Konnarak1234/tamdan-kon)*
+*Mobile Frontend of Tamdan kon Application*
 
 ## Repositary description
 This repo is used for store **Tamdan-Kon mobile app** project's folder.
@@ -16,8 +16,6 @@ This repo is used for store **Tamdan-Kon mobile app** project's folder.
 - choose the best route to get to each student pick-up point
 - student's attendance awareness, by encoding each student pin-point with colors (red-green-orange)   
 (picture of driver-route-screen below)   
-      
-![](assets/images/driver_route_screen.png)
 
 ## Technology used
 **Tamdan-Kon mobile application** is developed using Flutter framework.
